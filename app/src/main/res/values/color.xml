@@ -5,4 +5,5 @@
     <color name="white">#ffffffff</color>
     <color name="menu">#ffc82b1a</color>
     <color name="menu_text">#ffffca9f</color>
+    <color name="my_switch_color">#ff000000</color>
 </resources>

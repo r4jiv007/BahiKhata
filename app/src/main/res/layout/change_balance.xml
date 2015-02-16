@@ -11,7 +11,12 @@
         android:ems="10"
         android:id="@+id/editBal"
         android:hint="Amount"
-        android:textColor="#ff000000" />
+        android:textColor="#ff000000"
+        android:editable="true"
+        android:clickable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -28,7 +33,8 @@
         android:focusableInTouchMode="false"
         android:button="@color/menu"
         android:thumb="@color/menu"
-        android:layout_marginTop="10dp"
-        android:thumbTextPadding="20dp" />
+        android:layout_marginTop="15dp"
+        android:thumbTextPadding="20dp"
+        android:showText="true" />
 
 </LinearLayout>

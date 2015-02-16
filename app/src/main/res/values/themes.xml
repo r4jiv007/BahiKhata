@@ -19,4 +19,7 @@
     <style name="EditTextTheme" parent="android:TextAppearance.Holo.Widget.EditText">
         <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>
     </style>
+    <style name="SwitchTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/my_switch_color</item>
+    </style>
 </resources>

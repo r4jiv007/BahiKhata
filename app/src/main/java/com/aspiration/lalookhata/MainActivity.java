@@ -53,8 +53,6 @@ public class MainActivity extends Activity {
             }
         });*/
 
-        Log.e("Accounts",accounts.toString());
-
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
         recyclerView.setLayoutManager(new LinearLayoutManager(this,1,false));
@@ -63,6 +61,8 @@ public class MainActivity extends Activity {
         adapter = new CustomAdapter(this.getApplicationContext(), accounts);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //TextView emptyView = (TextView)findViewById(R.id.emptyView);
 
         myOnTouchListener = new OnSwipeTouchListener(this){
             @Override
@@ -95,6 +95,8 @@ public class MainActivity extends Activity {
                             mydb.addAccount(name.getText().toString(), (amount.getText().length() > 0) ? Integer.parseInt(amount.getText().toString()) : 0);
                             accounts.add(new Account(adapter.getItemCount() + 1, name.getText().toString(), (amount.getText().length() > 0) ? Integer.parseInt(amount.getText().toString()) : 0));
                         }
+
+                        //Check if it is working without it !!
 
                         Collections.sort(accounts, new Comparator<Account>() {
                             @Override
@@ -139,6 +141,7 @@ public class MainActivity extends Activity {
                         if(mydb.DeleteAcc(accounts.get(position).getId()) != 0){
                             accounts.remove(position);
                             adapter.notifyItemRemoved(position);
+
                         }
                     }
                 });
