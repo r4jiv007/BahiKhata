@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Bahi Khata</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_account">New Person</string>
+    <string name="ok_btn">Add</string>
+    <string name="ok">YES</string>
+    <string name="cancel">NO</string>
+
+    <string name="cancel_btn">Clear</string>
+    <string name="add_title">Add Account</string>
+    <string name="leave_title">Quit App</string>
+    <string name="close_acc">Delete?</string>
+</resources>

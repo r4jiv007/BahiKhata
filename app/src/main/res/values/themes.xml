@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="MyTheme"
+        parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:editTextStyle">@style/EditTextTheme</item>
+    </style>
+    <style name="MyActionBar"
+        parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/menu</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:icon">@android:color/transparent</item>
+    </style>
+    <style name="MyActionBarTitleText"
+        parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/menu_text</item>
+    </style>
+    <style name="EditTextTheme" parent="android:TextAppearance.Holo.Widget.EditText">
+        <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>
+    </style>
+</resources>
