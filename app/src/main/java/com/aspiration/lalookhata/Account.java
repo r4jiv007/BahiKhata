@@ -5,8 +5,26 @@ package com.aspiration.lalookhata;
  */
 public class Account {
     private String name;
-    private Integer balance;
+    private String place;
+    private Long contact;
+    private Long balance;
     private Integer id;
+
+    public Account(Integer id, String name, String place, Long contact,Long balance){
+        this.id = id;
+        this.name = name;
+        this.place = place;
+        this.contact = contact;
+        this.balance = balance;
+    }
+
+    public Long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Long balance) {
+        this.balance = balance;
+    }
 
     public Integer getId() {
         return id;
@@ -16,11 +34,14 @@ public class Account {
         this.id = id;
     }
 
-    public Account(Integer id,String name, Integer balance){
-        this.id = id;
-        this.name = name;
-        this.balance = balance;
+    public String getPlace() {
+        return place;
     }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
     public String getName() {
         return name;
     }
@@ -29,11 +50,11 @@ public class Account {
         this.name = name;
     }
 
-    public Integer getBalance() {
-        return balance;
+    public Long getContact() {
+        return contact;
     }
 
-    public void setBalance(Integer balance) {
-        this.balance = balance;
+    public void setContact(Long contact) {
+        this.contact = contact;
     }
 }

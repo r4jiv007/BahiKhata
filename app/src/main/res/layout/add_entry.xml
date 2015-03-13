@@ -2,59 +2,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="20dp"
-    android:gravity="center_vertical|center_horizontal">
-
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/name"
-        android:hint="Name"
-        android:editable="true"
-        android:clickable="true"
-        android:enabled="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
-
-    <com.shamanland.fonticon.FontIconView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/icon_vcard"
-        android:textSize="@dimen/icon_size"
-        android:textColor="@color/menu"
-        android:clickable="true"
-        android:id="@+id/contactBtn"
-        android:onClick="PickContactClick"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentRight="true" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:ems="10"
-        android:id="@+id/place"
-        android:hint="Place (Optional)"
-        android:editable="true"
-        android:clickable="true"
-        android:enabled="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
+    android:padding="20dp">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/contact"
-        android:hint="Contact (Optional)"
+        android:id="@+id/amount"
+        android:hint="Amount"
+        android:textColor="#ff000000"
         android:editable="true"
         android:clickable="true"
         android:enabled="true"
         android:focusable="true"
         android:focusableInTouchMode="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/date"
+        android:hint="Date"
+        android:editable="true"
+        android:clickable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/detail"
+        android:hint="Detail (Optional)"
+        android:editable="true"
+        android:clickable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/udhaar"
+            android:id="@+id/type1" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/paid"
+            android:id="@+id/type2" />
+    </RadioGroup>
 
 </LinearLayout>

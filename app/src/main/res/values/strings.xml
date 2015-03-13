@@ -2,15 +2,16 @@
 <resources>
 
     <string name="app_name">Bahi Khata</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="add_account">New Person</string>
-    <string name="ok_btn">Add</string>
-    <string name="ok">YES</string>
-    <string name="cancel">NO</string>
-
-    <string name="cancel_btn">Clear</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
     <string name="add_title">Add Account</string>
-    <string name="leave_title">Quit App</string>
+    <string name="add_title_entry">Add Entry</string>
     <string name="close_acc">Delete?</string>
+
+    <string name="udhaar">Udhaar</string>
+    <string name="paid">Paid</string>
+
+
+    <string name="base64EncodedPublicKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAllvhk2AoKBmhdU4ZCC+b+fb4foQvhy2Gwp6jals8RTc9ae1x7rK+BfVW/LqVUUiKbyuR9XmKThV/S53mw8MPK/0hmsv+0lNM6JSTI8uzyOOpne6AkYicS9c/8PdPr7fxYpCqJS0lGmpH3sLzAopOnhqDgLE+qrVupojYExZEGQDDrnw03+Ag7hgZkJ6IQMl1CJtO8M0VrJSOllShK2EV6lqsi81u13pjdK8CmfYLjsHMbX8W5qZFYkcVZDId6KelRhZ8F71nxxCeouEqvxpNLEvPaNzlf/J9N6OiOTJSI4T7KJ0/Rt1uo7W9VKdlAk+oQEsnE6doFyRERxaYN6a55wIDAQAB</string>
+
 </resources>

@@ -2,24 +2,27 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme"
-        parent="android:Theme.Holo.Light.DarkActionBar">
+        parent="Theme.Sherlock.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:editTextStyle">@style/EditTextTheme</item>
     </style>
+
     <style name="MyActionBar"
-        parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        parent="Widget.Sherlock.ActionBar">
         <item name="android:background">@color/menu</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
         <item name="android:icon">@android:color/transparent</item>
     </style>
-    <style name="MyActionBarTitleText"
-        parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title">
+
+    <style name="MyActionBarTitleText" parent="">
         <item name="android:textColor">@color/menu_text</item>
+        <item name="android:textSize">@dimen/actionbar_text_size</item>
     </style>
-    <style name="EditTextTheme" parent="android:TextAppearance.Holo.Widget.EditText">
+
+    <style name="EditTextTheme"
+        parent="android:TextAppearance.Holo.Widget.EditText">
         <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>
     </style>
-    <style name="SwitchTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
-        <item name="android:textColor">@color/my_switch_color</item>
-    </style>
+
 </resources>

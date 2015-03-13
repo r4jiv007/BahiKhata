@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="icon_add_people">a</string>
+    <string name="icon_user_add">a</string>
+    <string name="icon_phone">c</string>
+    <string name="icon_vcard">b</string>
+    <string name="icon_rupee">h</string>
+    <string name="icon_left_open_big">i</string>
+    <string name="icon_cancel">d</string>
+    <string name="icon_plus">e</string>
 </resources>
