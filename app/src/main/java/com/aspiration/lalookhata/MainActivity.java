@@ -14,6 +14,7 @@ import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -30,8 +31,12 @@ import com.aspiration.lalookhata.util.IabResult;
 import com.aspiration.lalookhata.util.Inventory;
 import com.aspiration.lalookhata.util.Purchase;
 import com.shamanland.fonticon.FontIconDrawable;
+import com.shamanland.fonticon.FontIconTextView;
 
 import java.util.ArrayList;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class MainActivity extends SherlockActivity{
     private static RecyclerView recyclerView;
@@ -50,10 +55,14 @@ public class MainActivity extends SherlockActivity{
     static EditText contact;
     SimpleCursorAdapter accountAdapter;
 
+    @InjectView(R.id.accList) ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.inject(this);
 
         //Action Bar
         final ActionBar actionBar = getSupportActionBar();
@@ -63,12 +72,12 @@ public class MainActivity extends SherlockActivity{
         //Playing with Data.
         mydb = new DbHelper(this);
 
-        final ListView listView = (ListView)findViewById(R.id.accList);
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header_account,null));
         accountAdapter = new SimpleCursorAdapter(this,R.layout.list_account,mydb.getAllAccounts(),
                 new String[]{mydb.ACCOUNT_COLUMN_NAME,mydb.ACCOUNT_COLUMN_PLACE,mydb.ACCOUNT_COLUMN_BALANCE},
                 new int[]{R.id.name,R.id.place,R.id.balance},0);
         listView.setAdapter(accountAdapter);
+        listView.setHeaderDividersEnabled(false);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -200,9 +209,9 @@ public class MainActivity extends SherlockActivity{
                             phones.moveToFirst();
                             String cNumber = phones.getString(phones.getColumnIndex("data1"));
                             System.out.println("number is:"+cNumber);
-                            contact.setText(phones.getString(phones.getColumnIndex("data1")));
+                            //contact.setText(phones.getString(phones.getColumnIndex("data1")));
                         }
-                        name.setText(c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+                        //name.setText(c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
                     }
                 }
                 break;
@@ -216,8 +225,34 @@ public class MainActivity extends SherlockActivity{
 
     public void AddAccountClick(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(LayoutInflater.from(this).inflate(R.layout.add_account, null));
+        View v = LayoutInflater.from(this).inflate(R.layout.add_account, null);
+        builder.setView(v);
         builder.setTitle(getString(R.string.add_title));
+        name = (EditText)v.findViewById(R.id.name);
+        //name.
+
+        Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
+        name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon,null);
+        name.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        PickContactClick(v);
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -230,16 +265,24 @@ public class MainActivity extends SherlockActivity{
             public void onClick(DialogInterface dialog, int which) {
 
                 name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
+                //name.
+
+                Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
+                name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
+
                 EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
                 contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
 
                 if (name.getText().length() > 0) {
+                    Log.e("Values",name.getText().toString() + place.getText().toString()+contact.getText().toString());
                     mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
                     //accounts.add(new Account(adapter.getItemCount() + 1, name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0L));
                 }
                 accountAdapter.notifyDataSetChanged();
             }
         });
+
+
 
         AlertDialog alert = builder.create();
         alert.show();
