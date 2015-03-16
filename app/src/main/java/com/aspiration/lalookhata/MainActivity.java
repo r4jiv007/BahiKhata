@@ -255,8 +255,8 @@ public class MainActivity extends SherlockActivity{
             name = (EditText)v.findViewById(R.id.name);
             //name.
 
-            Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
-            name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon,null);
+            final Drawable icon_contact = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
+            name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon_contact,null);
             name.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -265,6 +265,7 @@ public class MainActivity extends SherlockActivity{
                     final int DRAWABLE_RIGHT = 2;
                     final int DRAWABLE_BOTTOM = 3;
 
+                    try{
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                             // your action here
@@ -273,6 +274,11 @@ public class MainActivity extends SherlockActivity{
                             return true;
                         }
                     }
+                    }
+                   catch (Exception e){
+                       e.printStackTrace();
+                   }
+
                     return false;
                 }
             });
@@ -317,7 +323,8 @@ public class MainActivity extends SherlockActivity{
                         dialog.dismiss();
                     }
                     else{
-                        
+                        name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon_contact,null);
+                        name.setHint("Name required");
                     }
 
                 }

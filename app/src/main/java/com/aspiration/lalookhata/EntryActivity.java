@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ public class EntryActivity extends SherlockActivity{
         mydb = new DbHelper(this);
 
         final ListView listView = (ListView)findViewById(R.id.entriesList);
+        entries = new ArrayList<Entry>();
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header_entry,null));
         entryAdapter = new SimpleCursorAdapter(this,R.layout.list_entry,mydb.getEntriesById(accountId),
                 new String[]{mydb.ENTRY_COLUMN_DATE,mydb.ENTRY_COLUMN_DETAIL,mydb.ENTRY_COLUMN_AMOUNT},
@@ -117,13 +119,14 @@ public class EntryActivity extends SherlockActivity{
         Drawable radio = FontIconDrawable.inflate(getResources(),R.xml.icon_radio);
         Drawable radio_sel = FontIconDrawable.inflate(getResources(),R.xml.icon_radio_sel);
         //name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
-        RadioButton type1 = (RadioButton)v.findViewById(R.id.type1);
+
+        /*RadioButton type1 = (RadioButton)v.findViewById(R.id.type1);
         RadioButton type2 = (RadioButton)v.findViewById(R.id.type2);
-        /*type1.setButtonDrawable(icon);
+        *//*type1.setButtonDrawable(icon);
         type1.setCompoundDrawables(icon,icon,icon,icon);
-        type1.setBackground(icon);*/
+        type1.setBackground(icon);*//*
         type1.setButtonDrawable(radio_sel);
-        type2.setButtonDrawable(radio);
+        type2.setButtonDrawable(radio);*/
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -143,28 +146,30 @@ public class EntryActivity extends SherlockActivity{
                 EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
                 EditText date = (EditText) ((AlertDialog) dialog).findViewById(R.id.date);
                 EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
-                RadioButton type1 = (RadioButton)((AlertDialog) dialog).findViewById(R.id.type1);
-                RadioButton type2 = (RadioButton)((AlertDialog) dialog).findViewById(R.id.type2);
 
-                Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_radio);
-                type1.setButtonDrawable(icon);
+                RadioGroup radioGroupType = (RadioGroup) ((AlertDialog) dialog).findViewById(R.id.radioGroup1);
+                RadioButton radioBtnSelected;
 
                 if(!amount.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
-                    if(type1.isChecked()){
-                        account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
-                    }
-                    else if(type2.isChecked()){
-                        //amount.setText(amount.getText().toString());
+
+                    int selected = radioGroupType.getCheckedRadioButtonId();
+                    radioBtnSelected = (RadioButton) ((AlertDialog) dialog).findViewById(selected);
+                    String type = radioBtnSelected.getText().toString();
+
+                    if(type.equals("paid")){
                         account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
+                    }
+                    else{
+                        account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
                     }
 
                     mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
-                    entries.add(new Entry(adapter.getItemCount()+1,date.getText().toString(),detail.getText().toString(),Long.valueOf(amount.getText().toString()),accountId));
+                    entries.add(new Entry(entryAdapter.getCount()+1,date.getText().toString(),detail.getText().toString(),Long.valueOf(amount.getText().toString()),accountId));
 
                     mydb.changeBalance(account.getId(), account.getBalance());
                     accountBalance.setText(String.valueOf(account.getBalance()));
 
-                    adapter.notifyDataSetChanged();
+                    entryAdapter.notifyDataSetChanged();
 
                     dialog.dismiss();
                 }
