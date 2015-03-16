@@ -2,14 +2,17 @@ package com.aspiration.lalookhata;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +29,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.vending.billing.IInAppBillingService;
 import com.aspiration.lalookhata.util.IabHelper;
 import com.aspiration.lalookhata.util.IabResult;
 import com.aspiration.lalookhata.util.Inventory;
@@ -48,12 +52,13 @@ public class MainActivity extends SherlockActivity{
     IabHelper mHelper;
     String TAG="Error:";
     boolean isFullVersion = false;
-    static  final String SKU_FULL = "full";
+    static  final String SKU_FULL = "1";
     static final int RC_REQUEST = 1001;
     static final int PICK_CONTACT=1;
     static EditText name;
     static EditText contact;
     SimpleCursorAdapter accountAdapter;
+    IInAppBillingService mService;
 
     @InjectView(R.id.accList) ListView listView;
 
@@ -89,14 +94,14 @@ public class MainActivity extends SherlockActivity{
             }
         });
 
-        /*myDeleteListener = new View.OnClickListener() {
+        myDeleteListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteAccount(recyclerView.getChildPosition((View)v.getParent()));
+                //deleteAccount(recyclerView.getChildPosition((View)v.getParent()));
+                Log.e("Delete","Delete ");
             }
-        };*/
+        };
 
-        /*
         mHelper = new IabHelper(this,getResources().getString(R.string.base64EncodedPublicKey));
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener(){
             @Override
@@ -105,10 +110,24 @@ public class MainActivity extends SherlockActivity{
                     Log.e(TAG,"Problem setting up in app billing"+result);
                 }
                 Log.e(TAG,"In app billing setup successfully!");
-                mHelper.queryInventoryAsync(mGotInventoryListener);
+                //mHelper.queryInventoryAsync(mGotInventoryListener);
             }
         });
-        */
+
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mService = null;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                //mService = IInAppBillingService.Stub.asInterface(service);
+
+            }
+        };
+        //mService
+
 
     }
 
@@ -148,7 +167,7 @@ public class MainActivity extends SherlockActivity{
         }
     };
 
-    public void PurchaseFullVersion(View v){
+    public void PurchaseFullVersion(){
         mHelper.launchPurchaseFlow(this,SKU_FULL,RC_REQUEST,mPurchaseFinishedListener);
     }
 
@@ -224,79 +243,83 @@ public class MainActivity extends SherlockActivity{
     }
 
     public void AddAccountClick(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View v = LayoutInflater.from(this).inflate(R.layout.add_account, null);
-        builder.setView(v);
-        builder.setTitle(getString(R.string.add_title));
-        name = (EditText)v.findViewById(R.id.name);
-        //name.
+        if(mydb.numberOfAccounts() == 5 && !isFullVersion){
+            PurchaseFullVersion();
+        }
+        else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            View v = LayoutInflater.from(this).inflate(R.layout.add_account, null);
+            builder.setView(v);
+            builder.setTitle(getString(R.string.add_title));
+            name = (EditText)v.findViewById(R.id.name);
+            //name.
 
-        Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
-        name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon,null);
-        name.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
+            Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
+            name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon,null);
+            name.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    final int DRAWABLE_LEFT = 0;
+                    final int DRAWABLE_TOP = 1;
+                    final int DRAWABLE_RIGHT = 2;
+                    final int DRAWABLE_BOTTOM = 3;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        // your action here
-                        PickContactClick(v);
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                            // your action here
+                            PickContactClick(v);
 
-                        return true;
+                            return true;
+                        }
                     }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
-                //name.
-
-                Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
-                name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
-
-                EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
-                contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
-
-                if (name.getText().length() > 0) {
-                    Log.e("Values",name.getText().toString() + place.getText().toString()+contact.getText().toString());
-                    mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
-                    //accounts.add(new Account(adapter.getItemCount() + 1, name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0L));
+            builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
                 }
-                accountAdapter.notifyDataSetChanged();
-            }
-        });
+            });
+
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
+
+                    Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
+                    name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
+
+                    EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
+                    contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
+
+                    if (name.getText().length() > 0) {
+                        Log.e("Values",name.getText().toString() + place.getText().toString()+contact.getText().toString());
+                        mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
+                        //accounts.add(new Account(adapter.getItemCount() + 1, name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0L));
+                    }
+                    accountAdapter.notifyDataSetChanged();
+                }
+            });
 
 
 
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog alert = builder.create();
+            alert.show();
 
-        Resources resources = alert.getContext().getResources();
-        int color = resources.getColor(R.color.menu);
+            Resources resources = alert.getContext().getResources();
+            int color = resources.getColor(R.color.menu);
 
-        int alertTitleId = resources.getIdentifier("alertTitle", "id", "android");
-        TextView alertTitle = (TextView)alert.getWindow().getDecorView().findViewById(alertTitleId);
-        alertTitle.setTextColor(color);
+            int alertTitleId = resources.getIdentifier("alertTitle", "id", "android");
+            TextView alertTitle = (TextView)alert.getWindow().getDecorView().findViewById(alertTitleId);
+            alertTitle.setTextColor(color);
 
-        int titleDividerId = resources.getIdentifier("titleDivider", "id", "android");
-        View titleDivider = alert.getWindow().getDecorView().findViewById(titleDividerId);
-        titleDivider.setBackgroundColor(color);
+            int titleDividerId = resources.getIdentifier("titleDivider", "id", "android");
+            View titleDivider = alert.getWindow().getDecorView().findViewById(titleDividerId);
+            titleDivider.setBackgroundColor(color);
+        }
     }
 
     private void deleteAccount(final int position){

@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:measureWithLargestChild="false"
-    android:gravity="left"
-    android:baselineAligned="false"
-    android:paddingLeft="10dp"
-    android:showDividers="middle">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,8 +18,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/detail"
         android:hint="Detail"
-        android:textSize="14dp"
-        android:layout_centerHorizontal="true" />
+        android:textSize="14dp" />
 
     <TextView
         android:layout_width="wrap_content"

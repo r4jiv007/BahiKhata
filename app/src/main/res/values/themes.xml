@@ -5,6 +5,7 @@
         parent="Theme.Sherlock.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:editTextStyle">@style/EditTextTheme</item>
+        <item name="android:radioButtonStyle">@style/RadioButtonTheme</item>
     </style>
 
     <style name="MyActionBar"
@@ -24,5 +25,10 @@
         parent="android:TextAppearance.Holo.Widget.EditText">
         <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>
     </style>
+    <style name="RadioButtonTheme"
+        parent="android:Widget.Holo.CompoundButton.RadioButton">
+        <item name="android:color">@color/menu</item>
+
+        </style>
 
 </resources>

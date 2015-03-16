@@ -14,7 +14,7 @@
             android:layout_alignParentStart="false"
             android:layout_alignParentLeft="true"
             android:textSize="14dp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.5"
             android:layout_gravity="left"
             android:gravity="left" />
 
@@ -28,7 +28,7 @@
             android:layout_centerHorizontal="true"
             android:layout_weight="0.3"
             android:layout_gravity="left"
-            android:gravity="right" />
+            android:gravity="left" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,8 +39,8 @@
             android:layout_alignParentEnd="false"
             android:textSize="14dp"
             android:layout_toLeftOf="@+id/deleteBtn"
-            android:layout_weight="0.25"
-            android:gravity="right" />
+            android:layout_weight="0.15"
+            android:gravity="left" />
 
         <com.shamanland.fonticon.FontIconView
             android:layout_width="wrap_content"
@@ -53,6 +53,7 @@
             android:layout_alignParentBottom="false"
             android:layout_alignParentRight="true"
             android:layout_weight="0.05"
-            android:gravity="right" />
+            android:gravity="right"
+            android:onClick="myDeleteListener"/>
 
     </LinearLayout>

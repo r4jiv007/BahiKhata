@@ -63,7 +63,7 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public int numberOfRows(){
+    public int numberOfAccounts(){
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, TABLE_ACCOUNT);
         return numRows;

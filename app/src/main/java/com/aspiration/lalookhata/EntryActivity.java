@@ -58,10 +58,11 @@ public class EntryActivity extends SherlockActivity{
 
         final ListView listView = (ListView)findViewById(R.id.entriesList);
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header_entry,null));
-        entryAdapter = new SimpleCursorAdapter(this,R.layout.list_account,mydb.getEntriesById(accountId),
+        entryAdapter = new SimpleCursorAdapter(this,R.layout.list_entry,mydb.getEntriesById(accountId),
                 new String[]{mydb.ENTRY_COLUMN_DATE,mydb.ENTRY_COLUMN_DETAIL,mydb.ENTRY_COLUMN_AMOUNT},
                 new int[]{R.id.date,R.id.detail,R.id.amount},0);
         listView.setAdapter(entryAdapter);
+        listView.setHeaderDividersEnabled(false);
 
         account = mydb.getAccountById(accountId);
         accountBalance.setText(String.valueOf(account.getBalance()));
@@ -90,7 +91,7 @@ public class EntryActivity extends SherlockActivity{
                 AddEntryClick();
                 return true;
             case R.id.call:
-
+                CallPerson();
                 return true;
         }
 
@@ -100,7 +101,8 @@ public class EntryActivity extends SherlockActivity{
 
     public void AddEntryClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(LayoutInflater.from(this).inflate(R.layout.add_entry, null));
+        View v = LayoutInflater.from(this).inflate(R.layout.add_entry, null);
+        builder.setView(v);
         builder.setTitle(getString(R.string.add_title_entry));
         builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
             @Override
@@ -108,6 +110,18 @@ public class EntryActivity extends SherlockActivity{
                 dialog.dismiss();
             }
         });
+
+        //Changing the radiobutton style.
+        Drawable radio = FontIconDrawable.inflate(getResources(),R.xml.icon_radio);
+        Drawable radio_sel = FontIconDrawable.inflate(getResources(),R.xml.icon_radio_sel);
+        //name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
+        RadioButton type1 = (RadioButton)v.findViewById(R.id.type1);
+        RadioButton type2 = (RadioButton)v.findViewById(R.id.type2);
+        /*type1.setButtonDrawable(icon);
+        type1.setCompoundDrawables(icon,icon,icon,icon);
+        type1.setBackground(icon);*/
+        type1.setButtonDrawable(radio_sel);
+        type2.setButtonDrawable(radio);
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -118,6 +132,9 @@ public class EntryActivity extends SherlockActivity{
                 EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
                 RadioButton type1 = (RadioButton)((AlertDialog) dialog).findViewById(R.id.type1);
                 RadioButton type2 = (RadioButton)((AlertDialog) dialog).findViewById(R.id.type2);
+
+                Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_radio);
+                type1.setButtonDrawable(icon);
 
                 if(type1.isChecked()){
                     account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
@@ -152,6 +169,9 @@ public class EntryActivity extends SherlockActivity{
         titleDivider.setBackgroundColor(color);
     }
 
+    public void CallPerson(){
+
+    }
     protected void onDestroy() {
         super.onDestroy();
         if(mydb != null ) mydb.close();

@@ -9,11 +9,12 @@
         android:layout_height="wrap_content"
         android:text="Name"
         android:id="@+id/textView8"
-        android:layout_weight="40"
+        android:layout_weight="50"
         android:textStyle="bold"
         android:textSize="14sp"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" />
+        android:gravity="left"
+        android:paddingLeft="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,17 +25,19 @@
         android:textStyle="bold"
         android:textSize="14sp"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" />
+        android:gravity="left"
+        android:paddingLeft="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Balance"
         android:id="@+id/textView9"
-        android:layout_weight="30"
+        android:layout_weight="20"
         android:textStyle="bold"
         android:textSize="14sp"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" />
+        android:gravity="left"
+        android:paddingLeft="20dp"/>
 
 </LinearLayout>
