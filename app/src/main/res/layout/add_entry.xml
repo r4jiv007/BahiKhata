@@ -53,12 +53,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="5dp"
+        android:id="@+id/radioGroup1"
         android:paddingBottom="5dp">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/udhaar"
+            android:checked="true"
             android:id="@+id/type1"/>
 
         <RadioButton
