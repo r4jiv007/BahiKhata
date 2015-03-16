@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -286,7 +287,20 @@ public class MainActivity extends SherlockActivity{
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    //Do nothing
+                }
+            });
 
+
+
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
                     name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
 
                     Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
@@ -295,29 +309,31 @@ public class MainActivity extends SherlockActivity{
                     EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
                     contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
 
-                    if (name.getText().length() > 0) {
+                    if (!name.getText().toString().isEmpty()) {
                         Log.e("Values",name.getText().toString() + place.getText().toString()+contact.getText().toString());
                         mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
                         //accounts.add(new Account(adapter.getItemCount() + 1, name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0L));
+                        accountAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
                     }
-                    accountAdapter.notifyDataSetChanged();
+                    else{
+                        
+                    }
+
                 }
             });
 
 
 
-            AlertDialog alert = builder.create();
-            alert.show();
-
-            Resources resources = alert.getContext().getResources();
+            Resources resources = dialog.getContext().getResources();
             int color = resources.getColor(R.color.menu);
 
             int alertTitleId = resources.getIdentifier("alertTitle", "id", "android");
-            TextView alertTitle = (TextView)alert.getWindow().getDecorView().findViewById(alertTitleId);
+            TextView alertTitle = (TextView)dialog.getWindow().getDecorView().findViewById(alertTitleId);
             alertTitle.setTextColor(color);
 
             int titleDividerId = resources.getIdentifier("titleDivider", "id", "android");
-            View titleDivider = alert.getWindow().getDecorView().findViewById(titleDividerId);
+            View titleDivider = dialog.getWindow().getDecorView().findViewById(titleDividerId);
             titleDivider.setBackgroundColor(color);
         }
     }

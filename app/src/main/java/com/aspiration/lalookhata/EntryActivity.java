@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -126,7 +128,18 @@ public class EntryActivity extends SherlockActivity{
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //Do nothing
+            }
+        });
 
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
                 EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
                 EditText date = (EditText) ((AlertDialog) dialog).findViewById(R.id.date);
                 EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
@@ -136,36 +149,44 @@ public class EntryActivity extends SherlockActivity{
                 Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_radio);
                 type1.setButtonDrawable(icon);
 
-                if(type1.isChecked()){
-                    account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
+                if(!amount.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
+                    if(type1.isChecked()){
+                        account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
+                    }
+                    else if(type2.isChecked()){
+                        //amount.setText(amount.getText().toString());
+                        account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
+                    }
+
+                    mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
+                    entries.add(new Entry(adapter.getItemCount()+1,date.getText().toString(),detail.getText().toString(),Long.valueOf(amount.getText().toString()),accountId));
+
+                    mydb.changeBalance(account.getId(), account.getBalance());
+                    accountBalance.setText(String.valueOf(account.getBalance()));
+
+                    adapter.notifyDataSetChanged();
+
+                    dialog.dismiss();
                 }
-                else if(type2.isChecked()){
-                    //amount.setText(amount.getText().toString());
-                    account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
+                else if(amount.getText().toString().isEmpty()){
+                    amount.setError("Please enter the Amount");
                 }
-
-                mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
-                entries.add(new Entry(adapter.getItemCount()+1,date.getText().toString(),detail.getText().toString(),Long.valueOf(amount.getText().toString()),accountId));
-
-                mydb.changeBalance(account.getId(), account.getBalance());
-                accountBalance.setText(String.valueOf(account.getBalance()));
-
-                adapter.notifyDataSetChanged();
+                else if(date.getText().toString().isEmpty()){
+                    date.setError("Please enter the Date");
+                }
             }
         });
 
-        AlertDialog alert = builder.create();
-        alert.show();
 
-        Resources resources = alert.getContext().getResources();
+        Resources resources = dialog.getContext().getResources();
         int color = resources.getColor(R.color.menu);
 
         int alertTitleId = resources.getIdentifier("alertTitle", "id", "android");
-        TextView alertTitle = (TextView)alert.getWindow().getDecorView().findViewById(alertTitleId);
+        TextView alertTitle = (TextView)dialog.getWindow().getDecorView().findViewById(alertTitleId);
         alertTitle.setTextColor(color);
 
         int titleDividerId = resources.getIdentifier("titleDivider", "id", "android");
-        View titleDivider = alert.getWindow().getDecorView().findViewById(titleDividerId);
+        View titleDivider = dialog.getWindow().getDecorView().findViewById(titleDividerId);
         titleDivider.setBackgroundColor(color);
     }
 
