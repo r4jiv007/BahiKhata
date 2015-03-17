@@ -39,7 +39,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="phone"
         android:ems="10"
         android:id="@+id/contact"
         android:hint="Contact (Optional)"
@@ -47,6 +47,7 @@
         android:clickable="true"
         android:enabled="true"
         android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:phoneNumber="true" />
 
 </LinearLayout>

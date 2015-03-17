@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,17 +43,13 @@ import com.shamanland.fonticon.FontIconTextView;
 import com.shamanland.fonticon.FontIconView;
 
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends SherlockActivity{
-    private static RecyclerView recyclerView;
-    private static RecyclerView.Adapter adapter;
-    static View.OnClickListener myClickListener;
-    static View.OnClickListener myDeleteListener;
     DbHelper mydb;
-    ArrayList<Account> accounts;
     IabHelper mHelper;
     String TAG="Error:";
     boolean isFullVersion = false;

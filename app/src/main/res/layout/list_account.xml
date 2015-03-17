@@ -22,7 +22,8 @@
             android:textSize="14dp"
             android:layout_weight="0.5"
             android:layout_gravity="left"
-            android:gravity="left" />
+            android:gravity="left"
+            android:focusable="false" />
 
         <TextView
             android:layout_width="wrap_content"

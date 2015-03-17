@@ -1,6 +1,8 @@
 package com.aspiration.lalookhata;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -10,7 +12,10 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -24,7 +29,12 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.shamanland.fonticon.FontIconDrawable;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -114,10 +124,14 @@ public class EntryActivity extends SherlockActivity{
             }
         });
 
+        final TextView date = (EditText)v.findViewById(R.id.date);
+        Date dt = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        date.setText(dateFormat.format(dt).toString());
+
         //Changing the radiobutton style.
         Drawable radio = FontIconDrawable.inflate(getResources(),R.xml.icon_radio);
         Drawable radio_sel = FontIconDrawable.inflate(getResources(),R.xml.icon_radio_sel);
-        //name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
 
         /*RadioButton type1 = (RadioButton)v.findViewById(R.id.type1);
         RadioButton type2 = (RadioButton)v.findViewById(R.id.type2);
@@ -136,7 +150,7 @@ public class EntryActivity extends SherlockActivity{
              @Override
              public void onClick(View v) {
                  EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
-                 EditText date = (EditText) ((AlertDialog) dialog).findViewById(R.id.date);
+
                  EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
 
                  RadioGroup radioGroupType = (RadioGroup) ((AlertDialog) dialog).findViewById(R.id.radioGroup1);
@@ -185,6 +199,13 @@ public class EntryActivity extends SherlockActivity{
         View titleDivider = dialog.getWindow().getDecorView().findViewById(titleDividerId);
         titleDivider.setBackgroundColor(color);
     }
+    public void PickDate(View v){
+        System.out.println("hello!");
+        /*DialogFragment dialogFragment = new DatePickerFra();
+        dialogFragment.show(getSupportFragmentManager(),"datePicker");*/
+
+
+    }
 
     public void CallPerson(){
 
@@ -194,5 +215,12 @@ public class EntryActivity extends SherlockActivity{
         if(mydb != null ) mydb.close();
         mydb = null;
     }
+    /*private static class DatePickerFragment extends DatePickerFragment implements DatePickerDialog.OnDateSetListener{
+        Oncreate
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+        }
+    }*/
 
 }

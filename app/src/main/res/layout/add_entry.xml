@@ -29,11 +29,8 @@
         android:ems="10"
         android:id="@+id/date"
         android:hint="Date"
-        android:editable="true"
         android:clickable="true"
-        android:enabled="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:onClick="PickDate"/>
 
     <EditText
         android:layout_width="match_parent"
