@@ -55,7 +55,7 @@ public class MainActivity extends SherlockActivity{
     IabHelper mHelper;
     String TAG="Error:";
     boolean isFullVersion = false;
-    static  final String SKU_FULL = "1";
+    static  final String SKU_FULL = "full";
     static final int RC_REQUEST = 1001;
     static final int PICK_CONTACT=1;
     static EditText name;
@@ -84,26 +84,12 @@ public class MainActivity extends SherlockActivity{
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header_account,null));
         cursor = mydb.getAllAccounts();
 
-
         accountAdapter = new SimpleCursorAdapter(this,R.layout.list_account,cursor,
                 new String[]{mydb.ACCOUNT_COLUMN_ID,mydb.ACCOUNT_COLUMN_NAME,mydb.ACCOUNT_COLUMN_PLACE,mydb.ACCOUNT_COLUMN_BALANCE},
                 new int[]{R.id.id,R.id.name,R.id.place,R.id.balance},0);
 
         listView.setAdapter(accountAdapter);
         listView.setHeaderDividersEnabled(false);
-        for(int i=0;i<accountAdapter.getCount();i++){
-            //Log.e("gjg",accountAdapter.getView(i,));
-            ViewGroup v = ((ViewGroup)getViewByPosition(i,listView));
-            //.findViewById(R.id.name);
-            System.out.println(v.findViewById(R.id.deleteBtn));
-                    /*.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e("Deleting",String.valueOf(((View)v.getParent()).findViewById(R.id.id)));
-                }
-            });*/
-        }
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -117,17 +103,8 @@ public class MainActivity extends SherlockActivity{
                 startActivity(intent);
             }
         });
-        listView.findViewById(R.id.deleteBtn);
 
-        myDeleteListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //deleteAccount(recyclerView.getChildPosition((View)v.getParent()));
-                Log.e("Delete","Delete ");
-            }
-        };
-
-        mHelper = new IabHelper(this,getResources().getString(R.string.base64EncodedPublicKey));
+        /*mHelper = new IabHelper(this,getResources().getString(R.string.base64EncodedPublicKey));
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener(){
             @Override
             public void onIabSetupFinished(IabResult result) {
@@ -150,22 +127,10 @@ public class MainActivity extends SherlockActivity{
                 //mService = IInAppBillingService.Stub.asInterface(service);
 
             }
-        };
+        };*/
         //mService
 
 
-    }
-
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
     }
 
     @Override
@@ -276,6 +241,7 @@ public class MainActivity extends SherlockActivity{
     public void PickContactClick(View v){
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(intent, PICK_CONTACT);
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }
 
     public void AddAccountClick(){
@@ -349,17 +315,6 @@ public class MainActivity extends SherlockActivity{
             final AlertDialog dialog = builder.create();
             dialog.show();
 
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            });
-
-
-
             Resources resources = dialog.getContext().getResources();
             int color = resources.getColor(R.color.menu);
 
@@ -373,20 +328,24 @@ public class MainActivity extends SherlockActivity{
         }
     }
 
-    private void deleteAccount(final int position){
+    public void deleteAccountClick(View v){
+
+        TextView textView = (TextView)((ViewGroup)(v.getParent())).findViewById(R.id.id);
+        final int accountId = Integer.valueOf(textView.getText().toString());
+
+        Account account = mydb.getAccountById(accountId);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete "+ accounts.get(position).getName()+"'s Account?");
+        builder.setTitle("Delete "+ account.getName()+"'s Account?");
 
         builder.setPositiveButton(R.string.ok,new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(mydb.DeleteAcc(accounts.get(position).getId()) != 0){
-                    accounts.remove(position);
-                    adapter.notifyItemRemoved(position);
-
-                }
+               mydb.DeleteAcc(accountId);
+               cursor = mydb.getAllAccounts();
+               accountAdapter.changeCursor(cursor);
+               accountAdapter.notifyDataSetChanged();
             }
         });
         builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {

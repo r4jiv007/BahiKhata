@@ -48,7 +48,7 @@ public class EntryActivity extends SherlockActivity{
 
         //Action Bar
         final ActionBar actionBar = getSupportActionBar();
-        //actionBar.setTitle(account.getName());
+
 
         ButterKnife.inject(this);
 
@@ -70,7 +70,7 @@ public class EntryActivity extends SherlockActivity{
 
         account = mydb.getAccountById(accountId);
         accountBalance.setText(String.valueOf(account.getBalance()));
-
+        actionBar.setTitle(account.getName());
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +82,6 @@ public class EntryActivity extends SherlockActivity{
         Drawable iconPlus = FontIconDrawable.inflate(getResources(), R.xml.icon_plus);
         menu.findItem(R.id.entry_add).setIcon(iconPlus);
         menu.findItem(R.id.call).setIcon(iconPhone);
-
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -122,8 +122,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer DeleteAcc(Integer Id){
+    public void DeleteAcc(Integer Id){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_ACCOUNT,ACCOUNT_COLUMN_ID+"=?",new String[]{String.valueOf(Id)});
+        db.delete(TABLE_ACCOUNT,ACCOUNT_COLUMN_ID+"=?",new String[]{String.valueOf(Id)});
+        db.delete(TABLE_ENTRY,ENTRY_COLUMN_ACCOUNT_ID+"=?",new String[]{String.valueOf(Id)});
     }
 }
