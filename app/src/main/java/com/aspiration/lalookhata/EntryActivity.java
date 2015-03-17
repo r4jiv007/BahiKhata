@@ -127,50 +127,52 @@ public class EntryActivity extends SherlockActivity{
         type1.setButtonDrawable(radio_sel);
         type2.setButtonDrawable(radio);*/
 
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
-                EditText date = (EditText) ((AlertDialog) dialog).findViewById(R.id.date);
-                EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
-
-                RadioGroup radioGroupType = (RadioGroup) ((AlertDialog) dialog).findViewById(R.id.radioGroup1);
-                RadioButton radioBtnSelected;
-
-                if(!amount.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
-
-                    int selected = radioGroupType.getCheckedRadioButtonId();
-                    radioBtnSelected = (RadioButton) ((AlertDialog) dialog).findViewById(selected);
-                    String type = radioBtnSelected.getText().toString();
-
-                    if(type.equals("paid")){
-                        account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
-                    }
-                    else{
-                        account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
-                    }
-
-                    mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
-                    mydb.changeBalance(account.getId(), account.getBalance());
-                    accountBalance.setText(String.valueOf(account.getBalance()));
-                    Cursor cursor1 = mydb.getEntriesById(accountId);
-                    entryAdapter.changeCursor(cursor1);
-
-                    entryAdapter.notifyDataSetChanged();
-
-                    dialog.dismiss();
-                }
-                else if(amount.getText().toString().isEmpty()){
-                    amount.setError("Please enter the Amount");
-                }
-                else if(date.getText().toString().isEmpty()){
-                    date.setError("Please enter the Date");
-                }
-            }
-        });
+        builder.setPositiveButton(R.string.ok, null);
 
         final AlertDialog dialog = builder.create();
         dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
+                 EditText date = (EditText) ((AlertDialog) dialog).findViewById(R.id.date);
+                 EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
+
+                 RadioGroup radioGroupType = (RadioGroup) ((AlertDialog) dialog).findViewById(R.id.radioGroup1);
+                 RadioButton radioBtnSelected;
+
+                 if(!amount.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
+
+                     int selected = radioGroupType.getCheckedRadioButtonId();
+                     radioBtnSelected = (RadioButton) ((AlertDialog) dialog).findViewById(selected);
+                     String type = radioBtnSelected.getText().toString();
+
+                     if(type.equals("paid")){
+                         account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
+                     }
+                     else{
+                         account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
+                     }
+
+                     mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
+                     mydb.changeBalance(account.getId(), account.getBalance());
+                     accountBalance.setText(String.valueOf(account.getBalance()));
+                     Cursor cursor1 = mydb.getEntriesById(accountId);
+                     entryAdapter.changeCursor(cursor1);
+
+                     entryAdapter.notifyDataSetChanged();
+
+                     dialog.dismiss();
+                 }
+                 else if(amount.getText().toString().isEmpty()){
+                     amount.setError("Please enter the Amount");
+                 }
+                 else if(date.getText().toString().isEmpty()){
+                     date.setError("Please enter the Date");
+                 }
+             }
+         });
 
         Resources resources = dialog.getContext().getResources();
         int color = resources.getColor(R.color.menu);

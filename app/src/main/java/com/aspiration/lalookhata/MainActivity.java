@@ -291,29 +291,39 @@ public class MainActivity extends SherlockActivity{
                 }
             });
 
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
+            builder.setPositiveButton(R.string.ok, null);
 
-                    Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
-                    name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
 
                     EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
                     contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
 
-                    mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
-                    Cursor cursor1 = mydb.getAllAccounts();
-                    accountAdapter.changeCursor(cursor1);
-                    accountAdapter.notifyDataSetChanged();
-                    dialog.dismiss();
+                    if(name.getText().toString().isEmpty()) {
+                        name.setError("Name Please");
+                    }
+                    else{
+                        String contactVal = contact.getText().toString();
+                        Long contactNo;
+                        if(contactVal.isEmpty()){
+                            contactNo = 0L;
+                        }
+                        else{
+                            contactNo = Long.valueOf(contactVal);
+                        }
+                        mydb.addAccount(name.getText().toString(), place.getText().toString(), contactNo , 0);
+                        Cursor cursor1 = mydb.getAllAccounts();
+                        accountAdapter.changeCursor(cursor1);
+                        accountAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
                 }
             });
-
-
-
-            final AlertDialog dialog = builder.create();
-            dialog.show();
 
             Resources resources = dialog.getContext().getResources();
             int color = resources.getColor(R.color.menu);
