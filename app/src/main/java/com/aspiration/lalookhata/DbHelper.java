@@ -68,11 +68,13 @@ public class DbHelper extends SQLiteOpenHelper {
         int numRows = (int) DatabaseUtils.queryNumEntries(db, TABLE_ACCOUNT);
         return numRows;
     }
+
     public Cursor getAllAccounts(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("Select * from "+TABLE_ACCOUNT,null);
+        Cursor cursor = db.rawQuery("Select * from "+TABLE_ACCOUNT + " ORDER BY "+ ACCOUNT_COLUMN_NAME + " ASC",null);
         return cursor;
     }
+
     public Account getAccountById(int AccountId){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("Select * from " + TABLE_ACCOUNT + " where " + ACCOUNT_COLUMN_ID + " = ?", new String[]{String.valueOf(AccountId)});
@@ -97,7 +99,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public Cursor getEntriesById(int accountId){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("Select * from "+ TABLE_ENTRY + " where " + ENTRY_COLUMN_ACCOUNT_ID + " = ?",new String[]{String.valueOf(accountId)});
+        Cursor cursor = db.rawQuery("Select * from "+ TABLE_ENTRY + " where " + ENTRY_COLUMN_ACCOUNT_ID + " = ?" + " ORDER BY "+ ENTRY_COLUMN_DATE + " DESC",new String[]{String.valueOf(accountId)});
         return cursor;
     }
 
@@ -123,11 +125,5 @@ public class DbHelper extends SQLiteOpenHelper {
     public Integer DeleteAcc(Integer Id){
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_ACCOUNT,ACCOUNT_COLUMN_ID+"=?",new String[]{String.valueOf(Id)});
-    }
-
-    public void DeleteAll(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM "+TABLE_ACCOUNT);
-        db.execSQL("DELETE FROM "+TABLE_ENTRY);
     }
 }

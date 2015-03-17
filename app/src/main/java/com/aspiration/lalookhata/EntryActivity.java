@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -33,14 +34,12 @@ import butterknife.InjectView;
  */
 public class EntryActivity extends SherlockActivity{
 
-    private static RecyclerView recyclerView;
-    private static RecyclerView.Adapter adapter;
-    ArrayList<Entry> entries;
+    @InjectView(R.id.accountBalance) protected TextView accountBalance;
     DbHelper mydb;
     int accountId;
     Account account;
-    @InjectView(R.id.accountBalance) protected TextView accountBalance;
     SimpleCursorAdapter entryAdapter;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +59,10 @@ public class EntryActivity extends SherlockActivity{
         mydb = new DbHelper(this);
 
         final ListView listView = (ListView)findViewById(R.id.entriesList);
-        entries = new ArrayList<Entry>();
+
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header_entry,null));
-        entryAdapter = new SimpleCursorAdapter(this,R.layout.list_entry,mydb.getEntriesById(accountId),
+        cursor = mydb.getEntriesById(accountId);
+        entryAdapter = new SimpleCursorAdapter(this,R.layout.list_entry,cursor,
                 new String[]{mydb.ENTRY_COLUMN_DATE,mydb.ENTRY_COLUMN_DETAIL,mydb.ENTRY_COLUMN_AMOUNT},
                 new int[]{R.id.date,R.id.detail,R.id.amount},0);
         listView.setAdapter(entryAdapter);
@@ -131,18 +131,6 @@ public class EntryActivity extends SherlockActivity{
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Do nothing
-            }
-        });
-
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
                 EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
                 EditText date = (EditText) ((AlertDialog) dialog).findViewById(R.id.date);
                 EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
@@ -164,10 +152,10 @@ public class EntryActivity extends SherlockActivity{
                     }
 
                     mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
-                    entries.add(new Entry(entryAdapter.getCount()+1,date.getText().toString(),detail.getText().toString(),Long.valueOf(amount.getText().toString()),accountId));
-
                     mydb.changeBalance(account.getId(), account.getBalance());
                     accountBalance.setText(String.valueOf(account.getBalance()));
+                    Cursor cursor1 = mydb.getEntriesById(accountId);
+                    entryAdapter.changeCursor(cursor1);
 
                     entryAdapter.notifyDataSetChanged();
 
@@ -182,6 +170,8 @@ public class EntryActivity extends SherlockActivity{
             }
         });
 
+        final AlertDialog dialog = builder.create();
+        dialog.show();
 
         Resources resources = dialog.getContext().getResources();
         int color = resources.getColor(R.color.menu);

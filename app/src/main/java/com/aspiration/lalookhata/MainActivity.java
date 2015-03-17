@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -37,6 +38,7 @@ import com.aspiration.lalookhata.util.Inventory;
 import com.aspiration.lalookhata.util.Purchase;
 import com.shamanland.fonticon.FontIconDrawable;
 import com.shamanland.fonticon.FontIconTextView;
+import com.shamanland.fonticon.FontIconView;
 
 import java.util.ArrayList;
 
@@ -60,6 +62,7 @@ public class MainActivity extends SherlockActivity{
     static EditText contact;
     SimpleCursorAdapter accountAdapter;
     IInAppBillingService mService;
+    Cursor cursor;
 
     @InjectView(R.id.accList) ListView listView;
 
@@ -79,21 +82,42 @@ public class MainActivity extends SherlockActivity{
         mydb = new DbHelper(this);
 
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header_account,null));
-        accountAdapter = new SimpleCursorAdapter(this,R.layout.list_account,mydb.getAllAccounts(),
-                new String[]{mydb.ACCOUNT_COLUMN_NAME,mydb.ACCOUNT_COLUMN_PLACE,mydb.ACCOUNT_COLUMN_BALANCE},
-                new int[]{R.id.name,R.id.place,R.id.balance},0);
+        cursor = mydb.getAllAccounts();
+
+
+        accountAdapter = new SimpleCursorAdapter(this,R.layout.list_account,cursor,
+                new String[]{mydb.ACCOUNT_COLUMN_ID,mydb.ACCOUNT_COLUMN_NAME,mydb.ACCOUNT_COLUMN_PLACE,mydb.ACCOUNT_COLUMN_BALANCE},
+                new int[]{R.id.id,R.id.name,R.id.place,R.id.balance},0);
+
         listView.setAdapter(accountAdapter);
         listView.setHeaderDividersEnabled(false);
+        for(int i=0;i<accountAdapter.getCount();i++){
+            //Log.e("gjg",accountAdapter.getView(i,));
+            ViewGroup v = ((ViewGroup)getViewByPosition(i,listView));
+            //.findViewById(R.id.name);
+            System.out.println(v.findViewById(R.id.deleteBtn));
+                    /*.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("Deleting",String.valueOf(((View)v.getParent()).findViewById(R.id.id)));
+                }
+            });*/
+        }
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(),EntryActivity.class);
-                intent.putExtra("AccountId",1);
-                        //accounts.get(recyclerView.getChildPosition(v)).getId());
+
+                TextView textView = (TextView)view.findViewById(R.id.id);
+                final int accountId = Integer.valueOf(textView.getText().toString());
+                intent.putExtra("AccountId",accountId);
+
                 startActivity(intent);
             }
         });
+        listView.findViewById(R.id.deleteBtn);
 
         myDeleteListener = new View.OnClickListener() {
             @Override
@@ -130,6 +154,18 @@ public class MainActivity extends SherlockActivity{
         //mService
 
 
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
     @Override
@@ -188,7 +224,6 @@ public class MainActivity extends SherlockActivity{
         Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
         menu.findItem(R.id.user_add).setIcon(icon);
 
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -244,7 +279,7 @@ public class MainActivity extends SherlockActivity{
     }
 
     public void AddAccountClick(){
-        if(mydb.numberOfAccounts() == 5 && !isFullVersion){
+        if(mydb.numberOfAccounts() == 15 && !isFullVersion){
             PurchaseFullVersion();
         }
         else{
@@ -293,7 +328,19 @@ public class MainActivity extends SherlockActivity{
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //Do nothing
+                    name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
+
+                    Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
+                    name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
+
+                    EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
+                    contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
+
+                    mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
+                    Cursor cursor1 = mydb.getAllAccounts();
+                    accountAdapter.changeCursor(cursor1);
+                    accountAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
                 }
             });
 
@@ -307,25 +354,6 @@ public class MainActivity extends SherlockActivity{
                 @Override
                 public void onClick(View v)
                 {
-                    name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
-
-                    Drawable icon = FontIconDrawable.inflate(getResources(),R.xml.icon_user_add);
-                    name.setCompoundDrawablesWithIntrinsicBounds(icon,null,null,null);
-
-                    EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
-                    contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
-
-                    if (!name.getText().toString().isEmpty()) {
-                        Log.e("Values",name.getText().toString() + place.getText().toString()+contact.getText().toString());
-                        mydb.addAccount(name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0);
-                        //accounts.add(new Account(adapter.getItemCount() + 1, name.getText().toString(), place.getText().toString(), Long.valueOf(contact.getText().toString()), 0L));
-                        accountAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
-                    else{
-                        name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon_contact,null);
-                        name.setHint("Name required");
-                    }
 
                 }
             });

@@ -9,6 +9,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/id"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/name"
             android:layout_alignParentStart="false"
@@ -53,7 +59,6 @@
             android:layout_alignParentBottom="false"
             android:layout_alignParentRight="true"
             android:layout_weight="0.05"
-            android:gravity="right"
-            android:onClick="myDeleteListener"/>
+            android:gravity="right"/>
 
     </LinearLayout>
