@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,11 +41,18 @@ public class EntryActivity extends SherlockActivity{
     Account account;
     SimpleCursorAdapter entryAdapter;
     Cursor cursor;
+    Typeface myFontRegular,myFontLight,myFontBold,myFontSemibold;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
+
+        //Fonts
+        myFontRegular = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+        myFontLight = Typeface.createFromAsset(getAssets(),"OpenSans-Light.ttf");
+        myFontBold = Typeface.createFromAsset(getAssets(),"OpenSans-Bold.ttf");
+        myFontSemibold = Typeface.createFromAsset(getAssets(),"OpenSans-Semibold.ttf");
 
         //Action Bar
         final ActionBar actionBar = getSupportActionBar();
@@ -70,6 +78,9 @@ public class EntryActivity extends SherlockActivity{
         account = mydb.getAccountById(accountId);
         accountBalance.setText(String.valueOf(account.getBalance()));
         actionBar.setTitle(account.getName());
+
+        ((TextView) getWindow().findViewById(getResources().getIdentifier(
+                "action_bar_title", "id", "android"))).setTypeface(myFontBold);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -193,8 +204,6 @@ public class EntryActivity extends SherlockActivity{
 
         /*DialogFragment dialogFragment = new DatePickerFra();
         dialogFragment.show(getSupportFragmentManager(),"datePicker");*/
-
-
     }
 
     public void CallPerson(){

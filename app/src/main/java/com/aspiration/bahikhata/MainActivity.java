@@ -7,16 +7,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -46,6 +50,7 @@ public class MainActivity extends SherlockActivity{
     SimpleCursorAdapter accountAdapter;
     IInAppBillingService mService;
     Cursor cursor;
+    Typeface myFontRegular,myFontLight,myFontBold,myFontSemibold;
 
     @InjectView(R.id.accList) ListView listView;
 
@@ -56,10 +61,25 @@ public class MainActivity extends SherlockActivity{
 
         ButterKnife.inject(this);
 
+        //Fonts
+        myFontRegular = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+        myFontLight = Typeface.createFromAsset(getAssets(),"OpenSans-Light.ttf");
+        myFontBold = Typeface.createFromAsset(getAssets(),"OpenSans-Bold.ttf");
+        myFontSemibold = Typeface.createFromAsset(getAssets(),"OpenSans-Semibold.ttf");
+
         //Action Bar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setHomeButtonEnabled(false);
+
+        ((TextView) getWindow().findViewById(getResources().getIdentifier(
+                "action_bar_title", "id", "android"))).setTypeface(myFontBold);
+
+        /*TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
+
+        SpannableString s = new SpannableString(getString(R.string.app_name));
+        s.setSpan(new TypefaceSpan(this,""));*/
+
 
         //Playing with Data.
         mydb = new DbHelper(this);
@@ -73,6 +93,7 @@ public class MainActivity extends SherlockActivity{
 
         listView.setAdapter(accountAdapter);
         listView.setHeaderDividersEnabled(false);
+        //listView.get
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -256,7 +277,7 @@ public class MainActivity extends SherlockActivity{
             dialog.show();
 
             final Drawable icon_contact = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
-            name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon_contact,null);
+            name.setCompoundDrawablesWithIntrinsicBounds(null, null, icon_contact, null);
             name.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -265,9 +286,9 @@ public class MainActivity extends SherlockActivity{
                     final int DRAWABLE_RIGHT = 2;
                     final int DRAWABLE_BOTTOM = 3;
 
-                    try{
-                        if(event.getAction() == MotionEvent.ACTION_UP) {
-                            if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    try {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            if (event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                                 // your action here
                                 dialog.dismiss();
                                 PickContactClick(v);
@@ -275,8 +296,7 @@ public class MainActivity extends SherlockActivity{
                                 return true;
                             }
                         }
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -302,6 +322,15 @@ public class MainActivity extends SherlockActivity{
                     }
                 }
             });
+
+            //Styling
+            name.setTypeface(myFontLight);
+            place.setTypeface(myFontLight);
+            contact.setTypeface(myFontLight);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(myFontSemibold);
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(myFontSemibold);
+            ((TextView) dialog.findViewById(getResources().getIdentifier(
+                    "alertTitle", "id", "android"))).setTypeface(myFontSemibold);
 
             Resources resources = dialog.getContext().getResources();
             int color = resources.getColor(R.color.menu);
@@ -345,6 +374,12 @@ public class MainActivity extends SherlockActivity{
 
         AlertDialog alert = builder.create();
         alert.show();
+
+        //Styling
+        ((TextView) alert.findViewById(getResources().getIdentifier(
+                "alertTitle", "id", "android"))).setTypeface(myFontSemibold);
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(myFontSemibold);
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(myFontSemibold);
 
         Resources resources = alert.getContext().getResources();
         int color = resources.getColor(R.color.menu);
