@@ -11,6 +11,16 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/date"
+        android:hint="Date"
+        android:clickable="true"
+        android:onClick="PickDate"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
         android:id="@+id/amount"
@@ -21,16 +31,6 @@
         android:enabled="true"
         android:focusable="true"
         android:focusableInTouchMode="true" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/date"
-        android:hint="Date"
-        android:clickable="true"
-        android:onClick="PickDate"/>
 
     <EditText
         android:layout_width="match_parent"

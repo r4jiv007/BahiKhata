@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.aspiration.lalookhata.util;
+package com.aspiration.bahikhata.util;
 
 /**
  * Exception thrown when something went wrong with in-app billing.

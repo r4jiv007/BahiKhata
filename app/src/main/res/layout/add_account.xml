@@ -26,19 +26,6 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:ems="10"
-        android:id="@+id/place"
-        android:hint="Place (Optional)"
-        android:editable="true"
-        android:clickable="true"
-        android:enabled="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:inputType="phone"
         android:ems="10"
         android:id="@+id/contact"
@@ -49,5 +36,18 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:phoneNumber="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:ems="10"
+        android:id="@+id/place"
+        android:hint="Place (Optional)"
+        android:editable="true"
+        android:clickable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.aspiration.lalookhata;
+package com.aspiration.bahikhata;
 
 /**
  * Created by abhi on 13/02/15.
@@ -6,11 +6,11 @@ package com.aspiration.lalookhata;
 public class Account {
     private String name;
     private String place;
-    private Long contact;
+    private String contact;
     private Long balance;
     private Integer id;
 
-    public Account(Integer id, String name, String place, Long contact,Long balance){
+    public Account(Integer id, String name, String place, String contact,Long balance){
         this.id = id;
         this.name = name;
         this.place = place;
@@ -50,11 +50,11 @@ public class Account {
         this.name = name;
     }
 
-    public Long getContact() {
+    public String getContact() {
         return contact;
     }
 
-    public void setContact(Long contact) {
+    public void setContact(String contact) {
         this.contact = contact;
     }
 }

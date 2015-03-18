@@ -1,28 +1,21 @@
-package com.aspiration.lalookhata;
+package com.aspiration.bahikhata;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -30,10 +23,7 @@ import com.actionbarsherlock.view.Menu;
 import com.shamanland.fonticon.FontIconDrawable;
 
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.ButterKnife;
@@ -58,7 +48,6 @@ public class EntryActivity extends SherlockActivity{
 
         //Action Bar
         final ActionBar actionBar = getSupportActionBar();
-
 
         ButterKnife.inject(this);
 
@@ -150,7 +139,6 @@ public class EntryActivity extends SherlockActivity{
              @Override
              public void onClick(View v) {
                  EditText amount = (EditText) ((AlertDialog) dialog).findViewById(R.id.amount);
-
                  EditText detail = (EditText) ((AlertDialog) dialog).findViewById(R.id.detail);
 
                  RadioGroup radioGroupType = (RadioGroup) ((AlertDialog) dialog).findViewById(R.id.radioGroup1);
@@ -164,12 +152,13 @@ public class EntryActivity extends SherlockActivity{
 
                      if(type.equals("paid")){
                          account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
+                         mydb.addEntry(date.getText().toString(),detail.getText().toString(),-Float.valueOf(amount.getText().toString()),accountId);
                      }
                      else{
                          account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
+                         mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
                      }
 
-                     mydb.addEntry(date.getText().toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
                      mydb.changeBalance(account.getId(), account.getBalance());
                      accountBalance.setText(String.valueOf(account.getBalance()));
                      Cursor cursor1 = mydb.getEntriesById(accountId);
@@ -201,6 +190,7 @@ public class EntryActivity extends SherlockActivity{
     }
     public void PickDate(View v){
         System.out.println("hello!");
+
         /*DialogFragment dialogFragment = new DatePickerFra();
         dialogFragment.show(getSupportFragmentManager(),"datePicker");*/
 
@@ -208,7 +198,10 @@ public class EntryActivity extends SherlockActivity{
     }
 
     public void CallPerson(){
-
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + account.getContact().toString()));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
     protected void onDestroy() {
         super.onDestroy();

@@ -1,49 +1,37 @@
-package com.aspiration.lalookhata;
+package com.aspiration.bahikhata;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.provider.ContactsContract;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.vending.billing.IInAppBillingService;
-import com.aspiration.lalookhata.util.IabHelper;
-import com.aspiration.lalookhata.util.IabResult;
-import com.aspiration.lalookhata.util.Inventory;
-import com.aspiration.lalookhata.util.Purchase;
+import com.aspiration.bahikhata.util.IabHelper;
+import com.aspiration.bahikhata.util.IabResult;
+import com.aspiration.bahikhata.util.Inventory;
+import com.aspiration.bahikhata.util.Purchase;
 import com.shamanland.fonticon.FontIconDrawable;
-import com.shamanland.fonticon.FontIconTextView;
-import com.shamanland.fonticon.FontIconView;
-
-import java.util.ArrayList;
-import java.util.logging.Handler;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -51,13 +39,10 @@ import butterknife.InjectView;
 public class MainActivity extends SherlockActivity{
     DbHelper mydb;
     IabHelper mHelper;
-    String TAG="Error:";
+    String TAG="Error:",SKU_FULL = "full",newName = "",newNumber = "";
     boolean isFullVersion = false;
-    static  final String SKU_FULL = "full";
-    static final int RC_REQUEST = 1001;
-    static final int PICK_CONTACT=1;
-    static EditText name;
-    static EditText contact;
+    static final int RC_REQUEST = 1001,PICK_CONTACT=1;
+    static EditText name,contact,place;
     SimpleCursorAdapter accountAdapter;
     IInAppBillingService mService;
     Cursor cursor;
@@ -99,6 +84,7 @@ public class MainActivity extends SherlockActivity{
                 intent.putExtra("AccountId",accountId);
 
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
             }
         });
 
@@ -225,11 +211,10 @@ public class MainActivity extends SherlockActivity{
                                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,
                                     null, null);
                             phones.moveToFirst();
-                            String cNumber = phones.getString(phones.getColumnIndex("data1"));
-                            System.out.println("number is:"+cNumber);
-                            //contact.setText(phones.getString(phones.getColumnIndex("data1")));
+                            newNumber = phones.getString(phones.getColumnIndex("data1"));
                         }
-                        //name.setText(c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+                        newName = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        AddAccountClick();
                     }
                 }
                 break;
@@ -239,7 +224,7 @@ public class MainActivity extends SherlockActivity{
     public void PickContactClick(View v){
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(intent, PICK_CONTACT);
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+
     }
 
     public void AddAccountClick(){
@@ -252,35 +237,11 @@ public class MainActivity extends SherlockActivity{
             builder.setView(v);
             builder.setTitle(getString(R.string.add_title));
             name = (EditText)v.findViewById(R.id.name);
-            //name.
+            place = (EditText)v.findViewById(R.id.place);
+            contact = (EditText)v.findViewById(R.id.contact);
 
-            final Drawable icon_contact = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
-            name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon_contact,null);
-            name.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    final int DRAWABLE_LEFT = 0;
-                    final int DRAWABLE_TOP = 1;
-                    final int DRAWABLE_RIGHT = 2;
-                    final int DRAWABLE_BOTTOM = 3;
-
-                    try{
-                    if(event.getAction() == MotionEvent.ACTION_UP) {
-                        if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                            // your action here
-                            PickContactClick(v);
-
-                            return true;
-                        }
-                    }
-                    }
-                   catch (Exception e){
-                       e.printStackTrace();
-                   }
-
-                    return false;
-                }
-            });
+            if(!newName.isEmpty()) name.setText(newName);
+            if(!newNumber.isEmpty()) contact.setText(newNumber);
 
             builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
                 @Override
@@ -294,31 +255,50 @@ public class MainActivity extends SherlockActivity{
             final AlertDialog dialog = builder.create();
             dialog.show();
 
+            final Drawable icon_contact = FontIconDrawable.inflate(getResources(),R.xml.icon_vcard);
+            name.setCompoundDrawablesWithIntrinsicBounds(null,null,icon_contact,null);
+            name.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    final int DRAWABLE_LEFT = 0;
+                    final int DRAWABLE_TOP = 1;
+                    final int DRAWABLE_RIGHT = 2;
+                    final int DRAWABLE_BOTTOM = 3;
+
+                    try{
+                        if(event.getAction() == MotionEvent.ACTION_UP) {
+                            if(event.getRawX() >= (name.getRight() - name.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                                // your action here
+                                dialog.dismiss();
+                                PickContactClick(v);
+
+                                return true;
+                            }
+                        }
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    return false;
+                }
+            });
+
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    name = (EditText) ((AlertDialog) dialog).findViewById(R.id.name);
-
-                    EditText place = (EditText) ((AlertDialog) dialog).findViewById(R.id.place);
-                    contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
 
                     if(name.getText().toString().isEmpty()) {
                         name.setError("Name Please");
                     }
                     else{
-                        String contactVal = contact.getText().toString();
-                        Long contactNo;
-                        if(contactVal.isEmpty()){
-                            contactNo = 0L;
-                        }
-                        else{
-                            contactNo = Long.valueOf(contactVal);
-                        }
-                        mydb.addAccount(name.getText().toString(), place.getText().toString(), contactNo , 0);
+                        mydb.addAccount(name.getText().toString(), place.getText().toString(), contact.getText().toString() , 0);
                         Cursor cursor1 = mydb.getAllAccounts();
                         accountAdapter.changeCursor(cursor1);
                         accountAdapter.notifyDataSetChanged();
                         dialog.dismiss();
+                        newNumber = "";
+                        newName = "";
                     }
                 }
             });

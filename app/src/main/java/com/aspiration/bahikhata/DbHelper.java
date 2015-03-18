@@ -1,4 +1,4 @@
-package com.aspiration.lalookhata;
+package com.aspiration.bahikhata;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,12 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteTransactionListener;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by abhi on 13/02/15.
@@ -45,7 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 +ACCOUNT_COLUMN_ID+" integer primary key,"
                 +ACCOUNT_COLUMN_NAME+" text,"
                 +ACCOUNT_COLUMN_PLACE+" text,"
-                +ACCOUNT_COLUMN_CONTACT+" long,"
+                +ACCOUNT_COLUMN_CONTACT+" text,"
                 +ACCOUNT_COLUMN_BALANCE+" float);");
         db.execSQL("CREATE TABLE IF NOT EXISTS "+TABLE_ENTRY+"("
                 +ENTRY_COLUMN_ID+" integer primary key,"
@@ -82,7 +77,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return new Account(res.getInt(res.getColumnIndex(ACCOUNT_COLUMN_ID)),
                     res.getString(res.getColumnIndex(ACCOUNT_COLUMN_NAME)),
                     res.getString(res.getColumnIndex(ACCOUNT_COLUMN_PLACE)),
-                    res.getLong(res.getColumnIndex(ACCOUNT_COLUMN_CONTACT)),
+                    res.getString(res.getColumnIndex(ACCOUNT_COLUMN_CONTACT)),
                     res.getLong(res.getColumnIndex(ACCOUNT_COLUMN_BALANCE)));
     }
 
@@ -103,7 +98,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public boolean addAccount(String name,String place,Long contact,float balance){
+    public boolean addAccount(String name,String place,String contact,float balance){
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ACCOUNT_COLUMN_NAME,name);

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.aspiration.lalookhata.util;
+package com.aspiration.bahikhata.util;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -287,7 +287,7 @@ public class IabHelper {
     OnIabPurchaseFinishedListener mPurchaseListener;
 
     /**
-     * Same as calling {@link #launchPurchaseFlow(android.app.Activity, String, int, com.aspiration.lalookhata.util.IabHelper.OnIabPurchaseFinishedListener, String)}
+     * Same as calling {@link #launchPurchaseFlow(android.app.Activity, String, int, com.aspiration.bahikhata.util.IabHelper.OnIabPurchaseFinishedListener, String)}
      * with null as extraData.
      */
     public void launchPurchaseFlow(Activity act, String sku, int requestCode, OnIabPurchaseFinishedListener listener) {
