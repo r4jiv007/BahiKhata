@@ -6,61 +6,33 @@
     android:paddingTop="5dp"
     android:paddingBottom="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/id"
-            android:visibility="gone" />
-
-        <TextView
-            android:layout_width="wrap_content"
+    <TextView
+            android:layout_width="0px"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/name"
             android:layout_alignParentStart="false"
             android:layout_alignParentLeft="true"
             android:textSize="14dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_gravity="left"
             android:gravity="left"
-            android:focusable="false" />
+            android:focusable="false"
+            android:typeface="normal" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/place"
-            android:layout_alignParentStart="false"
-            android:textSize="14dp"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="0.3"
-            android:layout_gravity="left"
-            android:gravity="left" />
-
-        <TextView
-            android:layout_width="wrap_content"
+    <TextView
+            android:layout_width="0px"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/balance"
-            android:layout_gravity="left"
             android:layout_alignParentEnd="false"
             android:textSize="14dp"
             android:layout_toLeftOf="@+id/deleteBtn"
-            android:layout_weight="0.15"
-            android:gravity="left" />
-
-        <com.shamanland.fonticon.FontIconView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/icon_cancel"
-            android:textSize="@dimen/icon_size"
-            android:textColor="@color/menu"
-            android:clickable="true"
-            android:id="@+id/deleteBtn"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentRight="true"
-            android:layout_weight="0.05"
+            android:layout_weight="0.3"
+            android:textAlignment="viewStart"
             android:gravity="right"
-            android:onClick="deleteAccountClick" />
+            android:layout_marginRight="5dp"
+            android:layout_gravity="right"
+            android:typeface="normal" />
 
-    </LinearLayout>
+</LinearLayout>

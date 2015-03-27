@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Bahi Khata"
+            android:id="@+id/textView2"
+            android:textSize="28dp"
+            android:textColor="@color/menu"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="70dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView2"
+            android:id="@+id/nameEdit">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Hello"
+                android:id="@+id/textView"
+                android:layout_below="@+id/textView2" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/name"
+                android:hint="Name"
+                android:layout_below="@+id/textView2"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:enabled="true"
+                android:editable="true" />
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/bahiname"
+            android:hint="Name your Bahi Khata"
+            android:enabled="true"
+            android:editable="true"
+            android:layout_below="@+id/nameEdit"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="Ok"
+            android:id="@+id/startBtn"
+            android:layout_below="@+id/bahiname"
+            android:layout_centerHorizontal="true"
+            android:background="@color/menu"
+            android:textColor="@color/menu_text"
+            android:enabled="true"
+            android:outlineProvider="paddedBounds"
+            android:onClick="StartBtnClick"
+            android:layout_marginTop="20dp" />
+    </RelativeLayout>
+
+</LinearLayout>

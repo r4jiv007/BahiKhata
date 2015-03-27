@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/showTotal"
+        android:weightSum="1"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/dateSelect"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="left"
+            android:onClick="showDatePickerDialog" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total"
+            android:gravity="right"
+            android:layout_weight="0.25"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/totalBalance"
+            android:gravity="right"
+            android:layout_weight="0.3"/>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/entriesList"
+        android:smoothScrollbar="false"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:scrollbarThumbVertical="@color/menu_text_light"
+        android:layout_below="@+id/showTotal"/>
+
+    <com.shamanland.fonticon.FontIconView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/icon_plus_circled"
+        android:textSize="@dimen/button_icon_size"
+        android:textColor="@color/menu"
+        android:onClick="AddTxClick"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:editable="true"
+        android:enabled="true" />
+
+</RelativeLayout>

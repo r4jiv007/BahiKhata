@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/name"
+            android:hint="Whom?" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/detail"
+            android:hint="Why?"
+            android:layout_below="@+id/name"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detail"
+            android:id="@+id/dateGroup"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:weightSum="1">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/date"
+                android:layout_weight="0.8" />
+
+            <com.shamanland.fonticon.FontIconView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_calendar"
+                android:textSize="@dimen/icon_size"
+                android:textColor="@color/widgets"
+                android:onClick="PickDate"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:clickable="true"
+                android:enabled="true"
+                android:layout_weight="0.1" />
+
+            <com.shamanland.fonticon.FontIconView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_clock"
+                android:textSize="@dimen/icon_size"
+                android:textColor="@color/widgets"
+                android:onClick="PickTime"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:clickable="true"
+                android:enabled="true"
+                android:layout_weight="0.1" />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/type"
+            android:layout_below="@+id/dateGroup"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Credit"
+                android:id="@+id/credit"
+                android:checked="true"
+                android:layout_weight="0.5" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Debit"
+                android:id="@+id/debit"
+                android:layout_weight="0.5" />
+        </RadioGroup>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/amount"
+            android:layout_below="@+id/type"
+            android:hint="Money" />
+    </RelativeLayout>
+</LinearLayout>

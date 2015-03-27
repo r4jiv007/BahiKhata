@@ -32,6 +32,28 @@
         android:focusable="true"
         android:focusableInTouchMode="true" />
 
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:id="@+id/type"
+        android:paddingBottom="5dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/credit"
+            android:checked="true"
+            android:id="@+id/credit"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/debit"
+            android:id="@+id/debit"/>
+    </RadioGroup>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,27 +66,5 @@
         android:enabled="true"
         android:focusable="true"
         android:focusableInTouchMode="true" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:id="@+id/radioGroup1"
-        android:paddingBottom="5dp">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/udhaar"
-            android:checked="true"
-            android:id="@+id/type1"/>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/paid"
-            android:id="@+id/type2"/>
-    </RadioGroup>
 
 </LinearLayout>

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="icon_user_add">a</string>
-    <string name="icon_phone">c</string>
-    <string name="icon_vcard">b</string>
-    <string name="icon_rupee">h</string>
-    <string name="icon_cancel">d</string>
-    <string name="icon_plus">e</string>
-    <string name="icon_cd">f</string>
+    <string name="icon_users">a</string>
+    <string name="icon_plus_circled">c</string>
+    <string name="icon_calendar">b</string>
+    <string name="icon_check">d</string>
+    <string name="icon_clock">e</string>
 </resources>
