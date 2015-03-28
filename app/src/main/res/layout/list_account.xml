@@ -25,14 +25,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/balance"
-            android:layout_alignParentEnd="false"
             android:textSize="14dp"
-            android:layout_toLeftOf="@+id/deleteBtn"
             android:layout_weight="0.3"
-            android:textAlignment="viewStart"
             android:gravity="right"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="right"
+        android:layout_gravity="right"
             android:typeface="normal" />
 
 </LinearLayout>

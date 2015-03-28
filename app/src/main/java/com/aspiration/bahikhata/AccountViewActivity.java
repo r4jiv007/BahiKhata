@@ -24,26 +24,36 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 import com.shamanland.fonticon.FontIconDrawable;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class AccountViewActivity extends SherlockActivity{
-    DbHelper mydb;
-    static EditText name,contact,place;
-    SimpleCursorAdapter accountAdapter;
-    Cursor cursor;
     NumberFormat formatter;
-    ListView listView;
-    float total;
+    ListView accList;
     TextView totalBalance;
+    CustomAdapter customAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        listView = (ListView)findViewById(R.id.accList);
+        accList = (ListView)findViewById(R.id.accList);
+
+        customAdapter = new CustomAdapter(this);
+        accList.setAdapter(customAdapter);
+        customAdapter.loadObjects();
 
         //Money formatter
         formatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
@@ -58,44 +68,31 @@ public class AccountViewActivity extends SherlockActivity{
         Bundle extras = intent.getExtras();
         actionBar.setTitle(extras.getString("bahiname"));
 
-        //Playing with Data.
-        mydb = new DbHelper(this);
-        cursor = mydb.getAllAccounts();
-
-        accountAdapter = new SimpleCursorAdapter(this,R.layout.list_account,cursor,
-                new String[]{mydb.ACCOUNT_COLUMN_NAME,mydb.ACCOUNT_COLUMN_BALANCE},
-                new int[]{R.id.name,R.id.balance},0);
-
-        listView.setHeaderDividersEnabled(false);
-        listView.setFooterDividersEnabled(true);
-
-        accountAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                TextView v = (TextView) view;
-
-                if(columnIndex == cursor.getColumnIndex(mydb.ACCOUNT_COLUMN_BALANCE)){
-                    float balance = Float.valueOf(cursor.getString(cursor.getColumnIndex(mydb.ACCOUNT_COLUMN_BALANCE)));
-                    v.setText(formatter.format(balance));
-
-                    if(balance < 0)
-                        v.setTextColor(getResources().getColor(R.color.red));
-                    else
-                        v.setTextColor(getResources().getColor(R.color.green));
-
-                    total += balance;
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-        listView.setAdapter(accountAdapter);
         totalBalance = (TextView)findViewById(R.id.totalBalance);
-        totalBalance.setText(String.valueOf(total));
+        Double total = 0.0;
 
+        ParseQuery<ParseObject> query = new ParseQuery("Sample5");
+        query.selectKeys(Arrays.asList("balance"));
+        List<ParseObject> results;
+        try{
+            results = query.find();
+        }
+        catch (com.parse.ParseException e){
+            results = Collections.emptyList();
+            e.printStackTrace();
+        }
+
+        for(int i=0;i<results.size();i++){
+            total += results.get(i).getNumber("balance").doubleValue();
+        }
+
+        totalBalance.setText(String.valueOf(formatter.format(total)));
+        if(total < 0){
+            totalBalance.setTextColor(getResources().getColor(R.color.red));
+        }
+        else{
+            totalBalance.setTextColor(getResources().getColor(R.color.green));
+        }
     }
 
     @Override
@@ -147,4 +144,50 @@ public class AccountViewActivity extends SherlockActivity{
         return super.getApplicationContext();
     }
 
+    public class CustomAdapter extends ParseQueryAdapter<ParseObject> {
+
+        NumberFormat formatter;
+
+        public CustomAdapter(Context context){
+            super(context,new QueryFactory<ParseObject>(){
+                public ParseQuery create(){
+                    ParseQuery query = new ParseQuery("Sample5");
+                    query.addAscendingOrder("name");
+                    return query;
+                }
+            });
+        }
+
+        @Override
+        public View getItemView(ParseObject object, View v, ViewGroup parent) {
+            if(v == null){
+                v = View.inflate(getContext(),R.layout.list_account,null);
+            }
+            super.getItemView(object, v, parent);
+
+            //dateFormat = new SimpleDateFormat("dd/MM/yy");
+            //accountBalance = (TextView)findViewById(R.id.accountBalance);
+
+            //Money formatter
+            formatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
+            formatter.setMinimumFractionDigits(0);
+            formatter.setMaximumFractionDigits(0);
+
+            TextView nameView = (TextView)v.findViewById(R.id.name);
+            TextView balanceView = (TextView)v.findViewById(R.id.balance);
+
+            nameView.setText(object.getString("name"));
+            Double balance = object.getNumber("balance").doubleValue();
+
+            if(balance < 0){
+                balanceView.setText(formatter.format(balance));
+                balanceView.setTextColor(getContext().getResources().getColor(R.color.red));
+            }
+            else if(balance > 0){
+                balanceView.setText(formatter.format(balance));
+                balanceView.setTextColor(getContext().getResources().getColor(R.color.green));
+            }
+            return v;
+        }
+    }
 }

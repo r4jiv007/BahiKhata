@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,28 +10,30 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:id="@+id/showTotal"
         android:weightSum="1"
-        android:layout_marginTop="2dp">
+        android:gravity="center_vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
+            android:layout_weight="0.2"
             />
-        <Button
-            android:layout_width="wrap_content"
+
+        <com.shamanland.fonticon.FontIconButton
+            android:layout_weight="0.35"
+            android:layout_width="0px"
             android:layout_height="30dp"
             android:id="@+id/dateSelect"
-            android:layout_weight="0.35"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:color/transparent"
             android:gravity="left"
+            app:iconLeft="@xml/icon_calendar_small"
             android:onClick="showDatePickerDialog" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
             android:text="@string/total"
             android:gravity="right"
@@ -38,22 +41,35 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
             android:id="@+id/totalBalance"
             android:gravity="right"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.2"/>
     </LinearLayout>
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/grey"
+        android:layout_below="@+id/showTotal" />
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/entriesList"
-        android:smoothScrollbar="false"
+        android:smoothScrollbar="true"
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
         android:scrollbarThumbVertical="@color/menu_text_light"
         android:layout_below="@+id/showTotal"/>
+
+    <TextView
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent" />
 
     <com.shamanland.fonticon.FontIconView
         android:layout_width="wrap_content"
@@ -63,9 +79,10 @@
         android:textColor="@color/menu"
         android:onClick="AddTxClick"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
         android:editable="true"
-        android:enabled="true" />
+        android:enabled="true"
+        android:layout_alignParentBottom="true"
+        android:elevation="@dimen/button_icon_size" />
 
 </RelativeLayout>
