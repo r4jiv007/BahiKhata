@@ -16,78 +16,21 @@
             android:layout_height="wrap_content"
             android:id="@+id/name"
             android:inputType="textPersonName"
-            android:hint="Whom?" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/detail"
-            android:hint="Why?"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_below="@+id/name" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/detail"
-            android:id="@+id/dateGroup"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:weightSum="1">
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:id="@+id/date"
-                android:layout_weight="0.8" />
-
-            <com.shamanland.fonticon.FontIconView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/icon_calendar"
-                android:textSize="@dimen/icon_size"
-                android:textColor="@color/widgets"
-                android:onClick="PickDate"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:clickable="true"
-                android:enabled="true"
-                android:layout_weight="0.1" />
-
-            <com.shamanland.fonticon.FontIconView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/icon_clock"
-                android:textSize="@dimen/icon_size"
-                android:textColor="@color/widgets"
-                android:onClick="PickTime"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:clickable="true"
-                android:enabled="true"
-                android:layout_weight="0.1" />
-
-        </LinearLayout>
+            android:hint="@string/partyname" />
 
         <RadioGroup
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/type"
-            android:layout_below="@+id/dateGroup"
+            android:layout_below="@+id/amount"
             android:layout_marginTop="10dp"
             android:weightSum="1">
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Credit"
+                android:text="@string/credit"
                 android:id="@+id/credit"
                 android:checked="true"
                 android:layout_weight="0.5" />
@@ -95,7 +38,7 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Debit"
+                android:text="@string/debit"
                 android:id="@+id/debit"
                 android:layout_weight="0.5" />
         </RadioGroup>
@@ -106,9 +49,44 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/amount"
-            android:layout_below="@+id/type"
-            android:hint="Money"
+            android:layout_below="@+id/name"
+            android:hint="@string/amount"
             android:layout_marginTop="5dp" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/date"
+            android:layout_weight="0.8"
+            android:layout_below="@+id/type"
+            android:onClick="PickDate" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/detail"
+            android:hint="@string/detail"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/date" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:id="@+id/button"
+            android:layout_below="@+id/detail"
+            android:layout_alignParentEnd="true"
+            android:background="@color/menu"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/menu_text"
+            android:textStyle="bold"
+            android:onClick="AddTx" />
 
     </RelativeLayout>
 </LinearLayout>

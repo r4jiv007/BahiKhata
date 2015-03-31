@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -28,6 +30,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -66,8 +69,6 @@ public class AddTxActivity extends SherlockActivity{
     RadioGroup type;
     DateTime olddateTime;
     NumberFormat formatter;
-    Boolean isFullVersion = false;
-    ListView accList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +89,18 @@ public class AddTxActivity extends SherlockActivity{
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.add_tx_title);
 
+        name.requestFocus();
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(name,InputMethodManager.SHOW_IMPLICIT);
+
         mydateTime = new DateTime();
         date.setText(mydateTime.toString(format));
 
         olddateTime = format.parseDateTime(date.getText().toString());
 
         String[] names;
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Khata3");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Party");
+        query.fromLocalDatastore();
         query.selectKeys(Arrays.asList("name"));
 
         List<ParseObject> results;
@@ -128,38 +134,9 @@ public class AddTxActivity extends SherlockActivity{
         super.onStop();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.menu_addtx, menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
-
-        Drawable iconPlus = FontIconDrawable.inflate(getResources(), R.xml.icon_check);
-        menu.findItem(R.id.okBtn).setIcon(iconPlus);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.okBtn:
-                AddTx();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    public void AddTx(){
+    public void AddTx(View v){
         if(name.getText().toString().isEmpty()){
             name.setError("Required");
-        }
-        else if(detail.getText().toString().isEmpty()){
-            detail.setError("Required");
-        }
-        else if(detail.getText().toString().isEmpty()){
-            detail.setError("Required");
         }
         else if(amount.getText().toString().isEmpty()){
             amount.setError("Required");
@@ -167,71 +144,59 @@ public class AddTxActivity extends SherlockActivity{
         else{
             int selected = type.getCheckedRadioButtonId();
 
-            /*if(selected == R.id.credit){
-                account.setBalance(account.getBalance() - Integer.parseInt(amount.getText().toString()));
-                mydb.addEntry(dt.toString(), detail.getText().toString(), -Float.valueOf(amount.getText().toString()), accountId);
+            final ParseObject transaction = new ParseObject("Transaction");
+            transaction.put("detail", detail.getText().toString());
+            transaction.put("datetime",format.parseDateTime(date.getText().toString()).toDate());
+            final String type;
+
+            if(selected == R.id.credit){
+                type = "cr";
+                transaction.put("type", "cr");
+                transaction.put("amount", -Double.valueOf(amount.getText().toString()));
             }
             else{
-                account.setBalance(account.getBalance() + Integer.parseInt(amount.getText().toString()));
-                mydb.addEntry(dt.toString(),detail.getText().toString(),Float.valueOf(amount.getText().toString()),accountId);
+                type = "db";
+                transaction.put("type", "db");
+                transaction.put("amount", Double.valueOf(amount.getText().toString()));
             }
 
-            mydb.changeBalance(account.getId(), account.getBalance());
-            String balance = String.valueOf(account.getBalance());*/
-
-            final String type;
-            if(selected == R.id.credit)
-                type = "cr";
-            else
-                type = "db";
-
-            final HashMap tx = new HashMap();
-            tx.put("date",format.parseDateTime(date.getText().toString()).toDate());
-            tx.put("detail",detail.getText().toString());
-            tx.put("type",type);
-            tx.put("amount",Double.valueOf(amount.getText().toString()));
-
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Khata3");
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Party");
+            query.fromLocalDatastore();
             query.whereEqualTo("name", name.getText().toString());
 
-            query.findInBackground(new FindCallback<ParseObject>() {
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+
                 @Override
-                public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-                    if (e == null) {
+                public void done(ParseObject parseObject, com.parse.ParseException e) {
 
-                        if(parseObjects.size() == 0){
-                            ParseObject transaction = new ParseObject("Khata3");
-                            transaction.put("name", name.getText().toString());
-                            transaction.add("txs", tx);
-                            if(type == "cr")
-                                transaction.put("balance",-Double.valueOf(amount.getText().toString()));
-                            else
-                                transaction.put("balance", Double.valueOf(amount.getText().toString()));
-                            transaction.saveInBackground();
-                        }
-                        else{
+                    if(parseObject == null) {
+                        ParseObject party = new ParseObject("Party");
 
-                            parseObjects.get(0).add("txs", tx);
-                            if(type == "cr")
-                                parseObjects.get(0).put("balance",parseObjects.get(0).getDouble("balance")-Double.valueOf(amount.getText().toString()));
-                            else
-                                parseObjects.get(0).put("balance", parseObjects.get(0).getDouble("balance") + Double.valueOf(amount.getText().toString()));
-                            parseObjects.get(0).saveInBackground();
-                        }
-
-                    } else {
-                        Log.d("score", "Error: " + e.getMessage());
+                        party.put("name", name.getText().toString());
+                        if (type.equals("cr"))
+                            party.put("balance", -Double.valueOf(amount.getText().toString()));
+                        else
+                            party.put("balance", Double.valueOf(amount.getText().toString()));
+                        party.pinInBackground();
+                        transaction.put("parent",party);
+                        transaction.pinInBackground();
+                    }
+                    else {
+                        if (type.equals("cr"))
+                            parseObject.increment("balance",- Double.valueOf(amount.getText().toString()));
+                        else
+                            parseObject.increment("balance", Double.valueOf(amount.getText().toString()));
+                        parseObject.pinInBackground();
+                        transaction.put("parent",parseObject);
+                        transaction.pinInBackground();
                     }
                 }
             });
 
-
-
-
             Intent intent = new Intent(getApplicationContext(), TimeViewActivity.class);
+            finish();
             startActivity(intent);
         }
-
     }
     public void PickDate(View v){
 
@@ -243,7 +208,7 @@ public class AddTxActivity extends SherlockActivity{
     public void PickTime(View v){
 
         DialogFragment dialogFragment = new TimePickerFragment();
-        dialogFragment.show(getFragmentManager(),"timePicker");
+        dialogFragment.show(getFragmentManager(), "timePicker");
 
     }
 

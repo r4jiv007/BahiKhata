@@ -34,7 +34,7 @@ public class khataApplication extends Application {
 
         Parse.enableLocalDatastore(this);
 
-        ParseObject.registerSubclass(Transaction.class);
+        //ParseObject.registerSubclass(Transaction.class);
         Parse.initialize(this, "7jvGqmAF85p0EnxSkYI8lecW8evmvb8wnUNaRqvX", "BhIoNiXvBSn6iEbmZR0rekKfWtrXaEnoFMHQHbUu");
 
         /*ParseUser.enableAutomaticUser();

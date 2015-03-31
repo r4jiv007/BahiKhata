@@ -2,12 +2,22 @@
 <resources>
 
     <string name="app_name">Bahi Khata</string>
+    <string name="welcome">Welcome</string>
+    <string name="name">Name</string>
+    <string name="startBtn">Get Started</string>
+
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="add_tx_title">Add Transaction</string>
     <string name="total">Total : </string>
+
     <string name="credit">Credit</string>
     <string name="debit">Debit</string>
+    <string name="partyname">Name</string>
+    <string name="detail">Detail</string>
+    <string name="amount">Amount</string>
+
+
     <string name="base64EncodedPublicKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhJmZhtJHZ+euaynag//oBd94E5e6PfoDpnyDgMti4Xtg3RwZMjBp1dKRfEMdxlNmn2caXs7D4ZyaxTUUSRUJZAwgqvfOfX2xlEkeCNqgmlQrkScpUy/74e/VkPXYJWTHasJAc3VattKpN4dhAMdfZiVK6onkX4GN9MXhGcX1tHzgs1FmV1QvALmcB6dR23bL40a862rV2EhH5ju9h+WM9JtLl80S1ds8RKbKJZxE7VBPe9vxP+e1+S9h/WzVIZAQpZ7taBVwaHAbkcrCpeM9IRAMJe6oPTYLu3jN7BdQCRsAVg5S6STQSLVDxwYH5NcbG23Yz9gFqRceWZXI1prRnQIDAQAB</string>
 
 </resources>

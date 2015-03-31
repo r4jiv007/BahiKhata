@@ -15,18 +15,11 @@
         android:weightSum="1"
         android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            />
-
         <com.shamanland.fonticon.FontIconButton
-            android:layout_weight="0.35"
+            android:layout_weight="0.50"
             android:layout_width="0px"
             android:layout_height="30dp"
             android:id="@+id/dateSelect"
-            android:layout_marginRight="10dp"
             android:background="@android:color/transparent"
             android:gravity="left"
             app:iconLeft="@xml/icon_calendar_small"
@@ -37,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="@string/total"
             android:gravity="right"
-            android:layout_weight="0.25"
+            android:layout_weight="0.15"
             android:textStyle="bold" />
 
         <TextView
@@ -45,7 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/totalBalance"
             android:gravity="right"
-            android:layout_weight="0.2"/>
+            android:layout_weight="0.35"/>
     </LinearLayout>
 
     <View
@@ -78,11 +71,13 @@
         android:textSize="@dimen/button_icon_size"
         android:textColor="@color/menu"
         android:onClick="AddTxClick"
-        android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:editable="true"
+        android:shadowColor="@color/grey"
         android:enabled="true"
         android:layout_alignParentBottom="true"
-        android:elevation="@dimen/button_icon_size" />
+        android:layout_alignParentRight="true"
+        android:elevation="10dp"
+        android:layout_marginBottom="10dp" />
 
 </RelativeLayout>

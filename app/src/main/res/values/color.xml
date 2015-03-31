@@ -9,7 +9,8 @@
     <color name="menu_text_light">#66ffca9f</color>
     <color name="my_switch_color">#ff000000</color>
     <color name="black">#ff000000</color>
-    <color name="background">#fffffbe0</color>
+    <color name="start_background">#ffc82b1a</color>
+    <color name="background">#ffffffff</color>
     <color name="grey">#ffd3d3d3</color>
     <color name="widgets">#ff0099cc</color>
 

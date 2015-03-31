@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -40,6 +41,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -55,11 +57,8 @@ import de.greenrobot.event.EventBus;
  */
 public class TimeViewActivity extends SherlockActivity{
 
-    TextView accountBalance;
-    static String bahiname = null;
     ListView listView;
     CustomAdapter customAdapter;
-    float total;
     TextView totalBalance;
     NumberFormat formatter;
     DateTimeFormatter format = DateTimeFormat.forPattern("dd MMM");
@@ -76,13 +75,6 @@ public class TimeViewActivity extends SherlockActivity{
         actionBar.setHomeButtonEnabled(false);
 
         Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-
-       if(bahiname == null){
-            bahiname = extras.getString("bahiname");
-        }
-
-        actionBar.setTitle(bahiname);
 
         formatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
         formatter.setMinimumFractionDigits(0);
@@ -99,15 +91,13 @@ public class TimeViewActivity extends SherlockActivity{
         listView.setAdapter(customAdapter);
         customAdapter.loadObjects();
 
-        //String balance = String.valueOf(account.getBalance());
-        //accountBalance.setText(formatter.format(balance == ""?0L:Long.valueOf(balance)));
-
         totalBalance = (TextView)findViewById(R.id.totalBalance);
 
         Double total = 0.0;
 
-        ParseQuery<ParseObject> query = new ParseQuery("Sample5");
+        ParseQuery<ParseObject> query = new ParseQuery("Party");
         query.selectKeys(Arrays.asList("balance"));
+        query.fromLocalDatastore();
         List<ParseObject> results;
         try{
             results = query.find();
@@ -129,139 +119,8 @@ public class TimeViewActivity extends SherlockActivity{
             totalBalance.setTextColor(getResources().getColor(R.color.green));
         }
 
-        //FindObject();
-        //FindSubClass();
-        //SaveSubClassObject();
-    }
 
-    private void FindSubClass(){
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Sample5");
-        query.whereEqualTo("name", "Abhijeet Goel");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-                if(e == null) {
-
-                    System.out.println(parseObjects.get(0).getString("name"));
-                    try {
-                        System.out.println(parseObjects.get(0).getJSONArray("txs").getJSONObject(0).get("objectId"));
-                    }
-                    catch (JSONException e1){
-                        e1.printStackTrace();
-                    }
-
-                    /*
-                    ParseQuery<Transaction> query = ParseQuery.getQuery(Transaction.class);
-
-                    query.whereEqualTo("ObjectId",parseObjects.get(0).getParseObject("txs").getObjectId());
-
-                    query.findInBackground(new FindCallback<Transaction>() {
-                        @Override
-                        public void done(List<Transaction> transactions, com.parse.ParseException e) {
-                            for (Transaction transaction:transactions){
-                                System.out.println(transaction.getDetail());
-                            }
-                        }
-                    });
-
-                    System.out.println());*/
-                }
-                else{
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        /*ParseQuery<Transaction> query = ParseQuery.getQuery(Transaction.class);
-        //query.whereGreaterThan("dateTime",ParseQuery.getQuery("Sample2").get("names"));
-        query.whereEqualTo("type",ParseQuery.getQuery(""))
-
-        query.findInBackground(new FindCallback<Transaction>() {
-            @Override
-            public void done(List<Transaction> transactions, com.parse.ParseException e) {
-                for (Transaction transaction:transactions){
-                    //transaction.getName();
-                }
-            }
-        });*/
-
-    }
-    //Apply subclasses and then find the
-
-    private void FindObject(){
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Sample2");
-        //query.whereStartsWith("name", "Big Daddy's");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-                if(e == null) {
-                    System.out.println(parseObjects.toString());
-                }
-                else{
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void SaveObject(){
-        ParseObject parseObject = new ParseObject("Sample2");
-
-        JSONArray array = new JSONArray();
-        JSONObject object = new JSONObject();
-        try {
-            //object.put("date", format.parseDateTime(new DateTime().toString()).toDate());
-            object.put("detail", "waddup?");
-            object.put("type", "credit");
-            object.put("amount", 30000);
-            //array.put(object);
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        parseObject.put("Test",object);
-        System.out.println("added!!");
-        parseObject.saveInBackground();
-    }
-
-    private void SaveSubClassObject(){
-        ParseObject parseObject = new ParseObject("Sample5");
-
-        Transaction transaction = new Transaction();
-        transaction.setDateTime((new DateTime(2015,3,27,3,30)).toDate());
-        transaction.setAmount(3000.0);
-        transaction.setDetail("Time is powerful");
-        transaction.setType("cr");
-        Transaction transaction1 = new Transaction();
-        transaction1.setDateTime((new DateTime(2015,3,28,5,30)).toDate());
-        transaction1.setAmount(4000.0);
-        transaction1.setDetail("Testing out time!");
-        transaction1.setType("cr");
-        parseObject.addAll("txs",Arrays.asList(transaction,transaction1));
-
-        parseObject.put("name","Imon Raza");
-        parseObject.put("balance",8000.0);
-
-        parseObject.saveInBackground();
-        /*
-        JSONArray array = new JSONArray();
-        JSONObject object = new JSONObject();
-        try {
-            //object.put("date", format.parseDateTime(new DateTime().toString()).toDate());
-            object.put("detail", "waddup?");
-            object.put("type", "credit");
-            object.put("amount", 30000);
-            //array.put(object);
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        parseObject.put("Test",object);
-        System.out.println("added!!");
-        parseObject.saveInBackground();*/
     }
 
     @Override
@@ -295,6 +154,7 @@ public class TimeViewActivity extends SherlockActivity{
         // Inflate the menu; this adds items to the action bar if it is present.
 
         Drawable iconPlus = FontIconDrawable.inflate(getResources(), R.xml.icon_users);
+
         menu.findItem(R.id.accountView).setIcon(iconPlus);
 
         return super.onCreateOptionsMenu(menu);
@@ -314,13 +174,12 @@ public class TimeViewActivity extends SherlockActivity{
 
     public void SwitchView(){
         Intent intent = new Intent(getApplicationContext(), AccountViewActivity.class);
-        intent.putExtra("bahiname", getActionBar().getTitle());
-
         startActivity(intent);
     }
 
     public void AddTxClick(View v) {
         Intent intent = new Intent(getApplicationContext(), AddTxActivity.class);
+        finish();
         startActivity(intent);
     }
 
@@ -330,7 +189,6 @@ public class TimeViewActivity extends SherlockActivity{
     }
 
     public void onEvent(DatePickEvent event){
-
         dateSelect.setText(format.print(event.dateTime));
 
         customAdapter = new CustomAdapter(this,event.dateTime);
@@ -338,7 +196,6 @@ public class TimeViewActivity extends SherlockActivity{
         customAdapter.loadObjects();
 
         //Now repopulate the data using the the dateTime received now..
-
 
 
     }
@@ -379,14 +236,14 @@ public class TimeViewActivity extends SherlockActivity{
         public CustomAdapter(Context context,final DateTime date){
             super(context,new QueryFactory<ParseObject>(){
                 public ParseQuery create(){
-                    ParseQuery query = new ParseQuery("Transaction");
-                    //query.fromLocalDatastore();
-                    //query.fromPin();
 
-                    query.whereGreaterThan("dateTime",new DateTime(date.getYear(),date.getMonthOfYear(),date.getDayOfMonth(),0,0).toDate());
-                    query.whereLessThan("dateTime",new DateTime(date.getYear(),date.getMonthOfYear(),date.getDayOfMonth(),23,59).toDate());
+                    ParseQuery<ParseObject> query = new ParseQuery("Transaction");
+                    query.fromLocalDatastore();
+                    query.whereGreaterThan("datetime",new DateTime(date.getYear(),date.getMonthOfYear(),date.getDayOfMonth(),0,0).toDate());
+                    query.whereLessThan("datetime",new DateTime(date.getYear(),date.getMonthOfYear(),date.getDayOfMonth(),23,59).toDate());
+                    query.addDescendingOrder("datetime");
+                    query.include("parent");
 
-                    query.addDescendingOrder("dateTime");
                     return query;
                 }
             });
@@ -399,18 +256,6 @@ public class TimeViewActivity extends SherlockActivity{
             }
             super.getItemView(object, v, parent);
 
-            //dateFormat = new SimpleDateFormat("dd/MM/yy");
-            //accountBalance = (TextView)findViewById(R.id.accountBalance);
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Sample5");
-            //query.whereEqualTo("name", name.getText().toString());
-            query.findInBackground(new FindCallback<ParseObject>() {
-                           @Override
-                           public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-
-
-                           }
-                       });
-
             //Money formatter
             formatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
             formatter.setMinimumFractionDigits(0);
@@ -421,28 +266,27 @@ public class TimeViewActivity extends SherlockActivity{
             TextView detailView = (TextView)v.findViewById(R.id.detail);
             TextView amountView = (TextView)v.findViewById(R.id.amount);
 
-            //date object fetch only time part.
-            //if in milliseconds.
             //
             DateTimeFormatter builder = DateTimeFormat.forPattern("dd MMM yyyy  h:mm aa");
-            DateTime dateTime = new DateTime(object.getDate("dateTime"));
+            DateTime dateTime = new DateTime(object.getDate("datetime"));
 
             timeView.setText(builder.print(dateTime).split("  ")[1]);
 
-            //DateTimeFormat.forStyle("")
-            //nameView.setText(object.getString("name"));
             detailView.setText(object.getString("detail"));
 
             Double amount = object.getNumber("amount").doubleValue();
 
             if(object.getString("type").equals("cr")){
-                amountView.setText(formatter.format(-amount));
+                amountView.setText(formatter.format(amount));
                 amountView.setTextColor(getContext().getResources().getColor(R.color.red));
             }
             else if(object.getString("type").equals("db")){
                 amountView.setText(formatter.format(amount));
                 amountView.setTextColor(getContext().getResources().getColor(R.color.green));
             }
+
+            nameView.setText(((ParseObject)object.get("parent")).getString("name"));
+
             return v;
         }
     }

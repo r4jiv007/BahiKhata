@@ -1,9 +1,14 @@
 package com.aspiration.bahikhata;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -40,11 +45,21 @@ public class StartActivity extends SherlockActivity{
                     if(parseObjects.size() == 0){
                         setContentView(R.layout.activity_start);
                         name = (TextView)findViewById(R.id.name);
-                        bahiname = (TextView)findViewById(R.id.bahiname);
+                        name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                            @Override
+                            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                if(actionId == EditorInfo.IME_ACTION_DONE){
+                                    StartBtnClick();
+                                }
+                                return false;
+                            }
+                        });
+                        name.requestFocus();
+                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.showSoftInput(name,InputMethodManager.SHOW_IMPLICIT);
                     }
                     else{
                         Intent intent = new Intent(getApplicationContext(), TimeViewActivity.class);
-                        intent.putExtra("bahiname",parseObjects.get(0).getString("bahiname"));
                         startActivity(intent);
                     }
                 } else {
@@ -53,22 +68,16 @@ public class StartActivity extends SherlockActivity{
             }
         });
     }
-    public void StartBtnClick(View v){
+    public void StartBtnClick(){
         if(name.getText().toString().isEmpty()){
             name.setError("Required");
-        }
-        else if(bahiname.getText().toString().isEmpty()){
-            bahiname.setError("Required");
         }
         else{
             ParseObject identity = new ParseObject("Identity");
             identity.put("name", name.getText().toString());
-            identity.put("bahiname", bahiname.getText().toString());
-            //identity.saveInBackground();
             identity.pinInBackground();
 
             Intent intent = new Intent(getApplicationContext(), TimeViewActivity.class);
-            intent.putExtra("bahiname", bahiname.getText().toString());
             startActivity(intent);
         }
 

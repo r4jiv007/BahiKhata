@@ -65,13 +65,12 @@ public class AccountViewActivity extends SherlockActivity{
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setHomeButtonEnabled(false);
         Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        actionBar.setTitle(extras.getString("bahiname"));
 
         totalBalance = (TextView)findViewById(R.id.totalBalance);
         Double total = 0.0;
 
-        ParseQuery<ParseObject> query = new ParseQuery("Sample5");
+        ParseQuery<ParseObject> query = new ParseQuery("Party");
+        query.fromLocalDatastore();
         query.selectKeys(Arrays.asList("balance"));
         List<ParseObject> results;
         try{
@@ -135,7 +134,6 @@ public class AccountViewActivity extends SherlockActivity{
 
     public void SwitchView(){
         Intent intent = new Intent(getApplicationContext(), TimeViewActivity.class);
-        intent.putExtra("bahiname", getActionBar().getTitle());
         startActivity(intent);
     }
 
@@ -151,7 +149,8 @@ public class AccountViewActivity extends SherlockActivity{
         public CustomAdapter(Context context){
             super(context,new QueryFactory<ParseObject>(){
                 public ParseQuery create(){
-                    ParseQuery query = new ParseQuery("Sample5");
+                    ParseQuery query = new ParseQuery("Party");
+                    query.fromLocalDatastore();
                     query.addAscendingOrder("name");
                     return query;
                 }
