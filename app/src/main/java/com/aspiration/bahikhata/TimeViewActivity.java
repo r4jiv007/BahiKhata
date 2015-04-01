@@ -118,9 +118,6 @@ public class TimeViewActivity extends SherlockActivity{
         else{
             totalBalance.setTextColor(getResources().getColor(R.color.green));
         }
-
-
-
     }
 
     @Override
